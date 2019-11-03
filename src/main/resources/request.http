@@ -1,0 +1,55 @@
+# health check
+GET http://localhost:8085/lra-coordinator/health
+###
+# create LRA instance
+POST http://localhost:8085/lra-coordinator/instance
+Content-Type: application/json
+
+{
+  "timeout" : "6000",
+  "retry-limit" : "5"
+}
+###
+# cancel LRA instance
+POST http://localhost:8085/lra-coordinator/instance/cancel
+Content-Type: application/json
+
+{
+  "uuid" : "this-is-sample-uuid"
+}
+###
+# get a test applicant
+GET http://localhost:8085/lra-coordinator/applicant
+###
+# register a get applicant
+POST http://localhost:8085/lra-coordinator/applicant
+Content-Type: application/json
+
+{
+  "lraInstanceEntityUUID": "this-is-sample-uuid",
+  "appName": "state-machine",
+  "serviceName": "state-machine-health-v1",
+  "httpMethod": "GET",
+  "pathVariables": "123/456/789",
+  "requestParameters": {
+    "param1": "value1"
+  },
+  "requestBodyInJSON": "{ \"factoryName\" : \"type1\" }",
+  "lraApplicantStatus": "REGISTERED"
+}
+###
+# register a post applicant
+POST http://localhost:8085/lra-coordinator/applicant
+Content-Type: application/json
+
+{
+  "lraInstanceEntityUUID": "this-is-sample-uuid",
+  "appName": "state-machine",
+  "serviceName": "state-machine-create-v1",
+  "httpMethod": "POST",
+  "pathVariables": null,
+  "requestParameters": null,
+  "requestBodyInJSON": "{ \"factoryName\" : \"type1\" }"
+}
+
+###
