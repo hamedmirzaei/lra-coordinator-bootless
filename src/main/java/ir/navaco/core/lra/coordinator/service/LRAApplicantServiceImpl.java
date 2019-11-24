@@ -37,17 +37,25 @@ public class LRAApplicantServiceImpl implements LRAApplicantService {
             lraApplicantEntity.setRequestParameters(MapUtils.mapToString(lraApplicantVo.getRequestParameters()));
         lraApplicantEntity.setRequestBodyInJSON(lraApplicantVo.getRequestBodyInJSON());
         lraApplicantEntity.setLraApplicantStatus(lraApplicantVo.getLraApplicantStatus());
-        try {
-            lraApplicantEntity = lraApplicantRepository.save(lraApplicantEntity);
-        } catch (Exception e) {
-            throw new LRARequestException.InternalException("database exception occurred during saving LRA Applicant: " + lraApplicantEntity);
-        }
-        return lraApplicantEntity;
+        return saveLRAApplicant(lraApplicantEntity);
     }
 
     @Override
-    public LRAApplicantEntity updateLRAApplicant(LRAApplicantEntity lraApplicantEntity) {
-        return lraApplicantRepository.save(lraApplicantEntity);
+    public LRAApplicantEntity updateLRAApplicant(LRAApplicantEntity lraApplicantEntity) throws LRARequestException.InternalException {
+        try {
+            return lraApplicantRepository.save(lraApplicantEntity);
+        } catch (Exception e) {
+            throw new LRARequestException.InternalException("database exception occurred during updating LRA Applicant: " + lraApplicantEntity);
+        }
+    }
+
+    @Override
+    public LRAApplicantEntity saveLRAApplicant(LRAApplicantEntity lraApplicantEntity) throws LRARequestException.InternalException {
+        try {
+            return lraApplicantRepository.save(lraApplicantEntity);
+        } catch (Exception e) {
+            throw new LRARequestException.InternalException("database exception occurred during saving LRA Applicant: " + lraApplicantEntity);
+        }
     }
 
     @Autowired

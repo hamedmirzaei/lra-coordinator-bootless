@@ -10,5 +10,7 @@ public interface LRAApplicantService {
     LRAApplicantEntity registerLRAApplicant(LRAApplicantVo lraApplicantVo)
             throws LRAException.InstanceNotFoundException, LRARequestException.InternalException;
 
-    LRAApplicantEntity updateLRAApplicant(LRAApplicantEntity lraApplicantEntity);
+    LRAApplicantEntity updateLRAApplicant(LRAApplicantEntity lraApplicantEntity) throws LRARequestException.InternalException;
+
+    LRAApplicantEntity saveLRAApplicant(LRAApplicantEntity lraApplicantEntity) throws LRARequestException.InternalException;
 }

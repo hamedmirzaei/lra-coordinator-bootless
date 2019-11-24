@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service(LRAInstanceServiceImpl.BEAN_NAME)
 @Transactional
 public class LRAInstanceServiceImpl implements LRAInstanceService {
@@ -20,19 +22,14 @@ public class LRAInstanceServiceImpl implements LRAInstanceService {
     private LRAInstanceRepository lraInstanceRepository;
 
     @Override
-    public LRAInstanceEntity saveLRAInstance(LRAInstanceCreateRequestTypeVo lraInstanceCreateRequestTypeVo)
+    public LRAInstanceEntity createLRAInstance(LRAInstanceCreateRequestTypeVo lraInstanceCreateRequestTypeVo)
             throws LRARequestException.InternalException {
         LRAInstanceEntity lraInstanceEntity = new LRAInstanceEntity();
         lraInstanceEntity.setUuid("this-is-sample-uuid");//TODO UUID.randomUUID().toString()
         lraInstanceEntity.setRetryLimit(lraInstanceCreateRequestTypeVo.getRetryLimit());
         lraInstanceEntity.setTimeout(lraInstanceCreateRequestTypeVo.getTimeout());
         lraInstanceEntity.setLraInstanceStatus(LRAInstanceStatus.CREATED);
-        try {
-            lraInstanceEntity = lraInstanceRepository.save(lraInstanceEntity);
-        } catch (Exception e) {
-            throw new LRARequestException.InternalException("database exception occurred during saving LRA Instance: " + lraInstanceEntity);
-        }
-        return lraInstanceEntity;
+        return saveLRAInstance(lraInstanceEntity);
     }
 
     @Override
@@ -43,21 +40,35 @@ public class LRAInstanceServiceImpl implements LRAInstanceService {
             throw new LRAException.InstanceNotFoundException(lraInstanceCancelRequestTypeVo.getUuid());
         //what should be the status? CANCELING or CANCEL_REQUEST: CANCEL_REQUEST
         lraInstanceEntity.setLraInstanceStatus(LRAInstanceStatus.CANCEL_REQUEST);
-        try {
-            lraInstanceRepository.save(lraInstanceEntity);
-        } catch (Exception e) {
-            throw new LRARequestException.InternalException("database exception occurred during canceling LRA Instance: " + lraInstanceEntity);
-        }
-        //TODO cancel LRA (call applicants) based on timeout, retry-limit and
-        //     eurekaDiscovery => where is the right place to do it?
-        //     make a thread to process a single lraApplicant, then do it for all concurrently
-
-        lraInstanceEntity.getLraApplicantEntities();
+        updateLRAInstance(lraInstanceEntity);
     }
 
     @Override
     public LRAInstanceEntity findByUuid(String uuid) {
         return lraInstanceRepository.findByUuid(uuid);
+    }
+
+    @Override
+    public List<LRAInstanceEntity> findAllByLRAInstanceStatus(LRAInstanceStatus lraInstanceStatus) {
+        return lraInstanceRepository.findAllByLraInstanceStatus(lraInstanceStatus);
+    }
+
+    @Override
+    public LRAInstanceEntity updateLRAInstance(LRAInstanceEntity lraInstanceEntity) throws LRARequestException.InternalException {
+        try {
+            return lraInstanceRepository.save(lraInstanceEntity);
+        } catch (Exception e) {
+            throw new LRARequestException.InternalException("database exception occurred during updating LRA Instance: " + lraInstanceEntity);
+        }
+    }
+
+    @Override
+    public LRAInstanceEntity saveLRAInstance(LRAInstanceEntity lraInstanceEntity) throws LRARequestException.InternalException {
+        try {
+            return lraInstanceRepository.save(lraInstanceEntity);
+        } catch (Exception e) {
+            throw new LRARequestException.InternalException("database exception occurred during saving LRA Instance: " + lraInstanceEntity);
+        }
     }
 
     @Autowired
