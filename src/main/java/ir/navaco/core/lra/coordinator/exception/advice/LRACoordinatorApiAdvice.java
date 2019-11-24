@@ -3,6 +3,7 @@ package ir.navaco.core.lra.coordinator.exception.advice;
 
 import ir.navaco.core.lra.coordinator.exception.LRAException;
 import ir.navaco.core.lra.coordinator.exception.LRARequestException;
+import ir.navaco.core.lra.coordinator.exception.SystemException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -24,8 +25,13 @@ public class LRACoordinatorApiAdvice extends ResponseEntityExceptionHandler {
         return error(UNPROCESSABLE_ENTITY, e);
     }
 
-    @ExceptionHandler({LRARequestException.InternalException.class})
-    public ResponseEntity<String> handleInternalException(LRARequestException.InternalException e) {
+    @ExceptionHandler({SystemException.InternalException.class})
+    public ResponseEntity<String> handleInternalException(SystemException.InternalException e) {
+        return error(UNPROCESSABLE_ENTITY, e);
+    }
+
+    @ExceptionHandler({SystemException.PropertyFileException.class})
+    public ResponseEntity<String> handlePropertyFileException(SystemException.PropertyFileException e) {
         return error(UNPROCESSABLE_ENTITY, e);
     }
 

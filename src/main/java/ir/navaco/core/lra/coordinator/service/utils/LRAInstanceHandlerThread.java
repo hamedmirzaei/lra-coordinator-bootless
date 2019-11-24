@@ -1,10 +1,13 @@
-package ir.navaco.core.lra.coordinator.service;
+package ir.navaco.core.lra.coordinator.service.utils;
 
 import ir.navaco.core.lra.coordinator.domain.LRAApplicantEntity;
 import ir.navaco.core.lra.coordinator.domain.LRAInstanceEntity;
 import ir.navaco.core.lra.coordinator.enums.LRAApplicantStatus;
 import ir.navaco.core.lra.coordinator.enums.LRAInstanceStatus;
-import ir.navaco.core.lra.coordinator.exception.LRARequestException;
+import ir.navaco.core.lra.coordinator.exception.SystemException;
+import ir.navaco.core.lra.coordinator.service.LRAApplicantService;
+import ir.navaco.core.lra.coordinator.service.LRAInstanceService;
+import ir.navaco.core.lra.coordinator.utils.Constants;
 import ir.navaco.core.lra.coordinator.utils.HttpUtils;
 import ir.navaco.core.lra.coordinator.utils.MapUtils;
 import org.springframework.core.ParameterizedTypeReference;
@@ -39,7 +42,7 @@ public class LRAInstanceHandlerThread implements Callable<Boolean> {
             if (doCompensation(lraInstanceEntity)) {
                 return true;
             }
-        } catch (LRARequestException.InternalException e) {
+        } catch (SystemException.InternalException e) {
             e.printStackTrace();
         }
         return false;
@@ -75,7 +78,7 @@ public class LRAInstanceHandlerThread implements Callable<Boolean> {
             RestTemplate restTemplate = restTemplate(lraApplicantEntity.getConnectTimeout(), lraApplicantEntity.getReadTimeout());
 
             //set appName and serviceName
-            String url = "http://localhost:8888/edge-server/" + lraApplicantEntity.getAppName() + "/" + lraApplicantEntity.getServiceName();
+            String url = Constants.eurekaProperties.getEdgeServerURL() + lraApplicantEntity.getAppName() + "/" + lraApplicantEntity.getServiceName();
 
             //set path variables
             if (lraApplicantEntity.getPathVariables() != null && !lraApplicantEntity.getPathVariables().equals(""))

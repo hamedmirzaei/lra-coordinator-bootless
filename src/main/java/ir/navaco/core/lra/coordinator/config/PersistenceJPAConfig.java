@@ -21,7 +21,7 @@ import java.util.Properties;
 
 @Configuration
 @EnableTransactionManagement
-@PropertySource({ "classpath:database.properties" })
+@PropertySource({"classpath:database.properties"})
 @EnableJpaRepositories(basePackages = "ir.navaco.core.lra.coordinator.repository")
 @EnableJpaAuditing
 public class PersistenceJPAConfig {
@@ -37,7 +37,7 @@ public class PersistenceJPAConfig {
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         final LocalContainerEntityManagerFactoryBean entityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
         entityManagerFactoryBean.setDataSource(dataSource());
-        entityManagerFactoryBean.setPackagesToScan(new String[] { "ir.navaco.core.lra.coordinator.domain"});
+        entityManagerFactoryBean.setPackagesToScan(new String[]{"ir.navaco.core.lra.coordinator.domain"});
 
         final HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         entityManagerFactoryBean.setJpaVendorAdapter(vendorAdapter);
@@ -57,7 +57,7 @@ public class PersistenceJPAConfig {
         hibernateProperties.setProperty("hibernate.cache.use_query_cache", env.getProperty("hibernate.cache.use_query_cache"));
         return hibernateProperties;
     }
-    
+
     @Bean
     public DataSource dataSource() {
         final DriverManagerDataSource dataSource = new DriverManagerDataSource();

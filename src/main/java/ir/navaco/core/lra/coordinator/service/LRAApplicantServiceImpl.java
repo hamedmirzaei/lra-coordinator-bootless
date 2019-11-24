@@ -4,7 +4,7 @@ import ir.navaco.core.lra.coordinator.domain.LRAApplicantEntity;
 import ir.navaco.core.lra.coordinator.domain.LRAInstanceEntity;
 import ir.navaco.core.lra.coordinator.enums.LRAApplicantStatus;
 import ir.navaco.core.lra.coordinator.exception.LRAException;
-import ir.navaco.core.lra.coordinator.exception.LRARequestException;
+import ir.navaco.core.lra.coordinator.exception.SystemException;
 import ir.navaco.core.lra.coordinator.repository.LRAApplicantRepository;
 import ir.navaco.core.lra.coordinator.utils.MapUtils;
 import ir.navaco.core.lra.coordinator.vo.LRAApplicantRegisterRequestTypeVo;
@@ -24,7 +24,7 @@ public class LRAApplicantServiceImpl implements LRAApplicantService {
 
     @Override
     public LRAApplicantEntity registerLRAApplicant(LRAApplicantRegisterRequestTypeVo lraApplicantRegisterRequestTypeVo)
-            throws LRAException.InstanceNotFoundException, LRARequestException.InternalException {
+            throws LRAException.InstanceNotFoundException, SystemException.InternalException {
         LRAInstanceEntity instance = lraInstanceService.findByUuid(lraApplicantRegisterRequestTypeVo.getLraInstanceEntityUUID());
         if (instance == null)
             throw new LRAException.InstanceNotFoundException(lraApplicantRegisterRequestTypeVo.getLraInstanceEntityUUID());
@@ -44,20 +44,20 @@ public class LRAApplicantServiceImpl implements LRAApplicantService {
     }
 
     @Override
-    public LRAApplicantEntity updateLRAApplicant(LRAApplicantEntity lraApplicantEntity) throws LRARequestException.InternalException {
+    public LRAApplicantEntity updateLRAApplicant(LRAApplicantEntity lraApplicantEntity) throws SystemException.InternalException {
         try {
             return lraApplicantRepository.save(lraApplicantEntity);
         } catch (Exception e) {
-            throw new LRARequestException.InternalException("database exception occurred during updating LRA Applicant: " + lraApplicantEntity);
+            throw new SystemException.InternalException("database exception occurred during updating LRA Applicant: " + lraApplicantEntity);
         }
     }
 
     @Override
-    public LRAApplicantEntity saveLRAApplicant(LRAApplicantEntity lraApplicantEntity) throws LRARequestException.InternalException {
+    public LRAApplicantEntity saveLRAApplicant(LRAApplicantEntity lraApplicantEntity) throws SystemException.InternalException {
         try {
             return lraApplicantRepository.save(lraApplicantEntity);
         } catch (Exception e) {
-            throw new LRARequestException.InternalException("database exception occurred during saving LRA Applicant: " + lraApplicantEntity);
+            throw new SystemException.InternalException("database exception occurred during saving LRA Applicant: " + lraApplicantEntity);
         }
     }
 

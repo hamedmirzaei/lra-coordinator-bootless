@@ -36,11 +36,4 @@ public class LRARequestException {
         }
     }
 
-    // internal exceptions like database persist
-    public static class InternalException extends BaseException {
-        public InternalException(String message) {
-            super(message);
-        }
-    }
-
 }

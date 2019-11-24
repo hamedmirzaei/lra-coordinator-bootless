@@ -2,7 +2,7 @@ package ir.navaco.core.lra.coordinator.api;
 
 import ir.navaco.core.lra.coordinator.domain.LRAInstanceEntity;
 import ir.navaco.core.lra.coordinator.exception.LRAException;
-import ir.navaco.core.lra.coordinator.exception.LRARequestException;
+import ir.navaco.core.lra.coordinator.exception.SystemException;
 import ir.navaco.core.lra.coordinator.service.*;
 import ir.navaco.core.lra.coordinator.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +39,7 @@ public class LRACoordinatorApi {
      * @return UUID of LRA instance or failure message based on HttpStatus
      */
     @PostMapping(value = "/instance", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<LRAInstanceCreateResponseTypeVo> createLRA(@RequestBody LRAInstanceCreateRequestTypeVo lraInstanceCreateRequestTypeVo) throws LRARequestException.InternalException {
+    public ResponseEntity<LRAInstanceCreateResponseTypeVo> createLRA(@RequestBody LRAInstanceCreateRequestTypeVo lraInstanceCreateRequestTypeVo) throws SystemException.InternalException {
         LRAInstanceEntity lraInstanceEntity = lraInstanceService.createLRAInstance(lraInstanceCreateRequestTypeVo);
         return ResponseEntity.ok(new LRAInstanceCreateResponseTypeVo(lraInstanceEntity.getUuid()));
     }
@@ -52,7 +52,7 @@ public class LRACoordinatorApi {
      * @throws LRAException.InstanceNotFoundException
      */
     @PostMapping(value = "/instance/cancel", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<LRAInstanceCancelResponseTypeVo> cancelLRA(@RequestBody LRAInstanceCancelRequestTypeVo lraInstanceCancelRequestTypeVo) throws LRAException.InstanceNotFoundException, LRARequestException.InternalException {
+    public ResponseEntity<LRAInstanceCancelResponseTypeVo> cancelLRA(@RequestBody LRAInstanceCancelRequestTypeVo lraInstanceCancelRequestTypeVo) throws LRAException.InstanceNotFoundException, SystemException.InternalException {
         lraInstanceService.cancelLRAInstance(lraInstanceCancelRequestTypeVo);
         return ResponseEntity.ok(new LRAInstanceCancelResponseTypeVo("Successfully registered for cancel: " + lraInstanceCancelRequestTypeVo));
     }
@@ -67,7 +67,7 @@ public class LRACoordinatorApi {
      * @throws LRAException.InstanceNotFoundException
      */
     @PostMapping(value = "/applicant", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<LRAApplicantRegisterResponseTypeVo> registerApplicant(@RequestBody LRAApplicantRegisterRequestTypeVo lraApplicantRegisterRequestTypeVo) throws LRAException.InstanceNotFoundException, LRARequestException.InternalException {
+    public ResponseEntity<LRAApplicantRegisterResponseTypeVo> registerApplicant(@RequestBody LRAApplicantRegisterRequestTypeVo lraApplicantRegisterRequestTypeVo) throws LRAException.InstanceNotFoundException, SystemException.InternalException {
         lraApplicantService.registerLRAApplicant(lraApplicantRegisterRequestTypeVo);
         return ResponseEntity.ok(new LRAApplicantRegisterResponseTypeVo("Successfully registered: " + lraApplicantRegisterRequestTypeVo));
     }

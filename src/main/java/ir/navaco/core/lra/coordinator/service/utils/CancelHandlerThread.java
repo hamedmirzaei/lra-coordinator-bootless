@@ -1,8 +1,11 @@
-package ir.navaco.core.lra.coordinator.service;
+package ir.navaco.core.lra.coordinator.service.utils;
 
 import ir.navaco.core.lra.coordinator.domain.LRAInstanceEntity;
 import ir.navaco.core.lra.coordinator.enums.LRAInstanceStatus;
-import ir.navaco.core.lra.coordinator.exception.LRARequestException;
+import ir.navaco.core.lra.coordinator.exception.SystemException;
+import ir.navaco.core.lra.coordinator.service.LRAApplicantService;
+import ir.navaco.core.lra.coordinator.service.LRAInstanceService;
+import ir.navaco.core.lra.coordinator.utils.Constants;
 
 import java.util.List;
 import java.util.concurrent.*;
@@ -22,8 +25,8 @@ public class CancelHandlerThread implements Runnable {
     public void run() {
         int waitTime = 10; // 10 secs
         while (true) {
-            executor = new ThreadPoolExecutor(100,
-                    100, 0L,
+            executor = new ThreadPoolExecutor(Constants.lraProperties.getCorePoolSize(),
+                    Constants.lraProperties.getMaximumPoolSize(), 0L,
                     TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
             // Get CANCEL_REQUEST instances from db and process them
             List<LRAInstanceEntity> lraInstanceEntities = lraInstanceService.findAllByLRAInstanceStatus(LRAInstanceStatus.CANCEL_REQUEST);
@@ -58,7 +61,7 @@ public class CancelHandlerThread implements Runnable {
             }
             try {
                 lraInstanceService.updateLRAInstance(lraInstanceEntity);
-            } catch (LRARequestException.InternalException e) {
+            } catch (SystemException.InternalException e) {
                 e.printStackTrace();
             }
         }
