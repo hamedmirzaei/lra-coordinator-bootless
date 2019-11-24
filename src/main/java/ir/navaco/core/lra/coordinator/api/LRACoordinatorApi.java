@@ -29,7 +29,7 @@ public class LRACoordinatorApi {
 
     //TODO cancel all pending cancel requests at the startup of the application
     //there should be one background thread that periodically checks for new
-    //cancel requests and based on retry-limit and timeout do the proper action
+    //cancel requests and based on retry-limit and timeout, do the proper action
 
 
     private LRAInstanceService lraInstanceService;
@@ -86,11 +86,11 @@ public class LRACoordinatorApi {
     @PostMapping(value = "/applicant", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> registerApplicant(@RequestBody LRAApplicantVo lraApplicantVo) throws LRAException.InstanceNotFoundException {
         LRAApplicantEntity lraApplicantEntity = lraApplicantService.registerLRAApplicant(lraApplicantVo);
-        callCompensation(lraApplicantEntity);//TODO it should be removed
+        doCompensation(lraApplicantEntity);//TODO it should be removed
         return ResponseEntity.ok("Successfully registered");
     }
 
-    private void callCompensation(LRAApplicantEntity lraApplicantEntity) {
+    private void doCompensation(LRAApplicantEntity lraApplicantEntity) {
         RestTemplate restTemplate = new RestTemplate();
 
         //set appName and serviceName
@@ -111,6 +111,7 @@ public class LRACoordinatorApi {
 
         HttpMethod method = HttpMethod.resolve(lraApplicantEntity.getHttpMethod());
         HttpEntity<String> requestEntity = HttpUtils.createHeader(lraApplicantEntity.getRequestBodyInJSON(), method);
+
         ResponseEntity<Object> response = restTemplate.exchange(
                 url,
                 method,
@@ -119,10 +120,12 @@ public class LRACoordinatorApi {
                 });
         //TODO if response.StatusCode = 200 then every thing is Ok, not otherwise
         //remember that compensation actions should not return anything, they
-        //are just business code which we expect to return a StatusCode of 200 or something else (like 422)
+        //are just business code which we expect to return a StatusCode of 200
+        //or something else (like 422)
         if (response.getStatusCode() == HttpStatus.OK) {
-            //done
-            //TODO make status of applicant to acknowledged
+            //done: update status
+            lraApplicantEntity.setLraApplicantStatus(LRAApplicantStatus.ACKNOWLEDGED);
+            lraApplicantService.updateLRAApplicant(lraApplicantEntity);
         } else {
             //retry policy
         }

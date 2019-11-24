@@ -39,6 +39,11 @@ public class LRAApplicantServiceImpl implements LRAApplicantService {
         return lraApplicantRepository.save(lraApplicantEntity);
     }
 
+    @Override
+    public LRAApplicantEntity updateLRAApplicant(LRAApplicantEntity lraApplicantEntity) {
+        return lraApplicantRepository.save(lraApplicantEntity);
+    }
+
     @Autowired
     public void setLraApplicantRepository(LRAApplicantRepository lraApplicantRepository) {
         this.lraApplicantRepository = lraApplicantRepository;

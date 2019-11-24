@@ -8,4 +8,6 @@ public interface LRAApplicantService {
 
     LRAApplicantEntity registerLRAApplicant(LRAApplicantVo lraApplicantVo)
             throws LRAException.InstanceNotFoundException;
+
+    LRAApplicantEntity updateLRAApplicant(LRAApplicantEntity lraApplicantEntity);
 }

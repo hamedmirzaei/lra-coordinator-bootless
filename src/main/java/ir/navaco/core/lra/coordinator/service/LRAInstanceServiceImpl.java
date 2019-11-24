@@ -44,7 +44,10 @@ public class LRAInstanceServiceImpl implements LRAInstanceService {
         //TODO what should be the status? CANCELING or CANCEL_REQUEST
         lraInstanceEntity.setLraInstanceStatus(LRAInstanceStatus.CANCEL_REQUEST);
         lraInstanceRepository.save(lraInstanceEntity);
-        //TODO cancel LRA (call applicants) based on timeout, retry-limit and eurekaDiscovery => where is the right place to do it
+        //TODO cancel LRA (call applicants) based on timeout, retry-limit and
+        //     eurekaDiscovery => where is the right place to do it
+        //     make a thread to process a single lraApplicant, then do it for all concurrently
+
         lraInstanceEntity.getLraApplicantEntities();
     }
 
