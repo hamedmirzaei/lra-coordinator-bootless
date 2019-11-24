@@ -3,6 +3,7 @@ package ir.navaco.core.lra.coordinator.service;
 import ir.navaco.core.lra.coordinator.domain.LRAApplicantEntity;
 import ir.navaco.core.lra.coordinator.domain.LRAInstanceEntity;
 import ir.navaco.core.lra.coordinator.exception.LRAException;
+import ir.navaco.core.lra.coordinator.exception.LRARequestException;
 import ir.navaco.core.lra.coordinator.repository.LRAApplicantRepository;
 import ir.navaco.core.lra.coordinator.utils.MapUtils;
 import ir.navaco.core.lra.coordinator.vo.LRAApplicantVo;
@@ -22,7 +23,7 @@ public class LRAApplicantServiceImpl implements LRAApplicantService {
 
     @Override
     public LRAApplicantEntity registerLRAApplicant(LRAApplicantVo lraApplicantVo)
-            throws LRAException.InstanceNotFoundException {
+            throws LRAException.InstanceNotFoundException, LRARequestException.InternalException {
         LRAInstanceEntity instance = lraInstanceService.findByUuid(lraApplicantVo.getLraInstanceEntityUUID());
         if (instance == null)
             throw new LRAException.InstanceNotFoundException(lraApplicantVo.getLraInstanceEntityUUID());
@@ -36,7 +37,12 @@ public class LRAApplicantServiceImpl implements LRAApplicantService {
             lraApplicantEntity.setRequestParameters(MapUtils.mapToString(lraApplicantVo.getRequestParameters()));
         lraApplicantEntity.setRequestBodyInJSON(lraApplicantVo.getRequestBodyInJSON());
         lraApplicantEntity.setLraApplicantStatus(lraApplicantVo.getLraApplicantStatus());
-        return lraApplicantRepository.save(lraApplicantEntity);
+        try {
+            lraApplicantEntity = lraApplicantRepository.save(lraApplicantEntity);
+        } catch (Exception e) {
+            throw new LRARequestException.InternalException("database exception occurred during saving LRA Applicant: " + lraApplicantEntity);
+        }
+        return lraApplicantEntity;
     }
 
     @Override

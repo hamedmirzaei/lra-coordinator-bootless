@@ -47,13 +47,13 @@ public class MapUtils {
     }
 
     public static void validate(Map<String, String> input, Integer size, String... keys)
-            throws LRARequestException.BadSizeMap, LRARequestException.FieldNotExist {
+            throws LRARequestException.BadSizeMapException, LRARequestException.FieldNotExistException {
         if (input.size() != size) {
-            throw new LRARequestException.BadSizeMap(size, input.size());
+            throw new LRARequestException.BadSizeMapException(size, input.size());
         }
         for (String key : keys) {
             if (!input.containsKey(key)) {
-                throw new LRARequestException.FieldNotExist(key);
+                throw new LRARequestException.FieldNotExistException(key);
             }
         }
     }

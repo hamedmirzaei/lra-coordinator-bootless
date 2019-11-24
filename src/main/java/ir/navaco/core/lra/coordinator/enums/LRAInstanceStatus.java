@@ -4,8 +4,7 @@ public enum LRAInstanceStatus {
     CREATED("CREATED"),
     CANCEL_REQUEST("CANCEL_REQUEST"),
     CANCELING("CANCELING"),
-    CANCELED("CANCELED"),
-    COMPLETED("COMPLETED");
+    CANCELED("CANCELED");
 
     private String statusName;
 

@@ -14,13 +14,18 @@ import static org.springframework.http.HttpStatus.UNPROCESSABLE_ENTITY;
 @ControllerAdvice
 public class LRACoordinatorApiAdvice extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler({LRARequestException.FieldNotExist.class})
-    public ResponseEntity<String> handleFieldNotExist(LRARequestException.FieldNotExist e) {
+    @ExceptionHandler({LRARequestException.FieldNotExistException.class})
+    public ResponseEntity<String> handleFieldNotExistException(LRARequestException.FieldNotExistException e) {
         return error(UNPROCESSABLE_ENTITY, e);
     }
 
-    @ExceptionHandler({LRARequestException.BadSizeMap.class})
-    public ResponseEntity<String> handleBadSizeMap(LRARequestException.BadSizeMap e) {
+    @ExceptionHandler({LRARequestException.BadSizeMapException.class})
+    public ResponseEntity<String> handleBadSizeMapException(LRARequestException.BadSizeMapException e) {
+        return error(UNPROCESSABLE_ENTITY, e);
+    }
+
+    @ExceptionHandler({LRARequestException.InternalException.class})
+    public ResponseEntity<String> handleInternalException(LRARequestException.InternalException e) {
         return error(UNPROCESSABLE_ENTITY, e);
     }
 

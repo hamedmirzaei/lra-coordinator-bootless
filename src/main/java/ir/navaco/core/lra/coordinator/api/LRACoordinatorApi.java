@@ -12,6 +12,8 @@ import ir.navaco.core.lra.coordinator.service.LRAInstanceServiceImpl;
 import ir.navaco.core.lra.coordinator.utils.HttpUtils;
 import ir.navaco.core.lra.coordinator.utils.MapUtils;
 import ir.navaco.core.lra.coordinator.vo.LRAApplicantVo;
+import ir.navaco.core.lra.coordinator.vo.LRAInstanceCancelRequestTypeVo;
+import ir.navaco.core.lra.coordinator.vo.LRAInstanceCreateRequestTypeVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.ParameterizedTypeReference;
@@ -48,29 +50,25 @@ public class LRACoordinatorApi {
     /**
      * this will generates a LRA instance, persist it in DB and returns its UUID
      *
-     * @param input list of params, for example timeout or retry
+     * @param lraInstanceCreateRequestTypeVo request type
      * @return UUID of LRA instance or failure message based on HttpStatus
-     * @throws LRARequestException.FieldNotExist
-     * @throws LRARequestException.BadSizeMap
      */
     @PostMapping(value = "/instance", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> createLRA(@RequestBody Map<String, String> input) throws LRARequestException.FieldNotExist, LRARequestException.BadSizeMap {
-        LRAInstanceEntity lraInstanceEntity = lraInstanceService.saveLRAInstance(input);
+    public ResponseEntity<String> createLRA(@RequestBody LRAInstanceCreateRequestTypeVo lraInstanceCreateRequestTypeVo) throws LRARequestException.InternalException {
+        LRAInstanceEntity lraInstanceEntity = lraInstanceService.saveLRAInstance(lraInstanceCreateRequestTypeVo);
         return ResponseEntity.ok(lraInstanceEntity.getUuid());
     }
 
     /**
      * this will cancel a LRA instance
      *
-     * @param input
-     * @return
-     * @throws LRARequestException.FieldNotExist
-     * @throws LRARequestException.BadSizeMap
+     * @param lraInstanceCancelRequestTypeVo request type
+     * @return message for failed and successful execution
      * @throws LRAException.InstanceNotFoundException
      */
     @PostMapping(value = "/instance/cancel", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> cancelLRA(@RequestBody Map<String, String> input) throws LRARequestException.FieldNotExist, LRARequestException.BadSizeMap, LRAException.InstanceNotFoundException {
-        lraInstanceService.cancelLRAInstance(input);
+    public ResponseEntity<String> cancelLRA(@RequestBody LRAInstanceCancelRequestTypeVo lraInstanceCancelRequestTypeVo) throws LRAException.InstanceNotFoundException, LRARequestException.InternalException {
+        lraInstanceService.cancelLRAInstance(lraInstanceCancelRequestTypeVo);
         return ResponseEntity.ok("Successfully canceled");
     }
 
@@ -84,7 +82,7 @@ public class LRACoordinatorApi {
      * @throws LRAException.InstanceNotFoundException
      */
     @PostMapping(value = "/applicant", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> registerApplicant(@RequestBody LRAApplicantVo lraApplicantVo) throws LRAException.InstanceNotFoundException {
+    public ResponseEntity<String> registerApplicant(@RequestBody LRAApplicantVo lraApplicantVo) throws LRAException.InstanceNotFoundException, LRARequestException.InternalException {
         LRAApplicantEntity lraApplicantEntity = lraApplicantService.registerLRAApplicant(lraApplicantVo);
         doCompensation(lraApplicantEntity);//TODO it should be removed
         return ResponseEntity.ok("Successfully registered");
