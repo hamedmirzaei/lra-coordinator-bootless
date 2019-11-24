@@ -12,6 +12,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -52,10 +53,11 @@ public class LRAInstanceHandlerThread implements Callable<Boolean> {
                     try {
                         if (doCompensation(lraApplicantEntity)) {
                             lraApplicantEntity.setLraApplicantStatus(LRAApplicantStatus.ACKNOWLEDGED);
-                            lraApplicantService.updateLRAApplicant(lraApplicantEntity);
                         } else {
+                            lraApplicantEntity.setLraApplicantStatus(LRAApplicantStatus.FAILED);
                             done = false;
                         }
+                        lraApplicantService.updateLRAApplicant(lraApplicantEntity);
                     } catch (Exception e) {
                         e.printStackTrace();
                         done = false;
@@ -70,7 +72,7 @@ public class LRAInstanceHandlerThread implements Callable<Boolean> {
 
     public boolean doCompensation(LRAApplicantEntity lraApplicantEntity) {
         try {
-            RestTemplate restTemplate = new RestTemplate();
+            RestTemplate restTemplate = restTemplate(lraApplicantEntity.getConnectTimeout(), lraApplicantEntity.getReadTimeout());
 
             //set appName and serviceName
             String url = "http://localhost:8888/edge-server/" + lraApplicantEntity.getAppName() + "/" + lraApplicantEntity.getServiceName();
@@ -108,5 +110,12 @@ public class LRAInstanceHandlerThread implements Callable<Boolean> {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public RestTemplate restTemplate(Integer connectTimeout, Integer readTimeout) {
+        SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
+        factory.setConnectTimeout(connectTimeout);
+        factory.setReadTimeout(readTimeout);
+        return new RestTemplate(factory);
     }
 }

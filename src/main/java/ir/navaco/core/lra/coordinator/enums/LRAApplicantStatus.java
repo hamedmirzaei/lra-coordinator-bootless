@@ -2,7 +2,8 @@ package ir.navaco.core.lra.coordinator.enums;
 
 public enum LRAApplicantStatus {
     REGISTERED("REGISTERED"),
-    ACKNOWLEDGED("ACKNOWLEDGED");
+    ACKNOWLEDGED("ACKNOWLEDGED"),
+    FAILED("FAILED");
 
     private String statusName;
 

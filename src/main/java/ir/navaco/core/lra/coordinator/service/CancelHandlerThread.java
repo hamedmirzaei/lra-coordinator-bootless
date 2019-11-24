@@ -20,7 +20,7 @@ public class CancelHandlerThread implements Runnable {
     }
 
     public void run() {
-        int waitTime = 10 * 1000; // 10 secs
+        int waitTime = 10; // 10 secs
         while (true) {
             executor = new ThreadPoolExecutor(100,
                     100, 0L,
@@ -29,12 +29,14 @@ public class CancelHandlerThread implements Runnable {
             List<LRAInstanceEntity> lraInstanceEntities = lraInstanceService.findAllByLRAInstanceStatus(LRAInstanceStatus.CANCEL_REQUEST);
             if (lraInstanceEntities == null || lraInstanceEntities.size() == 0) {
                 try {
-                    Thread.sleep(waitTime);
-                    waitTime += 10 * 1000;// add another 10 secs
+                    Thread.sleep(waitTime * 1000);
+                    waitTime += 10;// add another 10 secs
+                    if (waitTime == 60)
+                        waitTime = 10;
                 } catch (InterruptedException e) {
                 }
             } else {
-                waitTime = 10 * 1000;// reset to 10 secs
+                waitTime = 10;// reset to 10 secs
                 process(lraInstanceEntities);
             }
         }

@@ -34,9 +34,6 @@ public class LRAInstanceEntity implements Serializable {
     @Convert(converter = LRAInstanceStatusConverter.class)
     private LRAInstanceStatus lraInstanceStatus;
 
-    @Column(name = "TIMEOUT", nullable = false)
-    private Integer timeout;
-
     @Column(name = "RETRY_LIMIT", nullable = false)
     private Integer retryLimit;
 
@@ -57,19 +54,17 @@ public class LRAInstanceEntity implements Serializable {
     public LRAInstanceEntity() {
     }
 
-    public LRAInstanceEntity(String uuid, LRAInstanceStatus lraInstanceStatus, Integer timeout, Integer retryLimit, List<LRAApplicantEntity> lraApplicantEntities) {
+    public LRAInstanceEntity(String uuid, LRAInstanceStatus lraInstanceStatus, Integer retryLimit, List<LRAApplicantEntity> lraApplicantEntities) {
         this.uuid = uuid;
         this.lraInstanceStatus = lraInstanceStatus;
-        this.timeout = timeout;
         this.retryLimit = retryLimit;
         this.lraApplicantEntities = lraApplicantEntities;
     }
 
-    public LRAInstanceEntity(Long id, String uuid, LRAInstanceStatus lraInstanceStatus, Integer timeout, Integer retryLimit, List<LRAApplicantEntity> lraApplicantEntities) {
+    public LRAInstanceEntity(Long id, String uuid, LRAInstanceStatus lraInstanceStatus, Integer retryLimit, List<LRAApplicantEntity> lraApplicantEntities) {
         this.id = id;
         this.uuid = uuid;
         this.lraInstanceStatus = lraInstanceStatus;
-        this.timeout = timeout;
         this.retryLimit = retryLimit;
         this.lraApplicantEntities = lraApplicantEntities;
     }
@@ -106,14 +101,6 @@ public class LRAInstanceEntity implements Serializable {
         this.lraApplicantEntities = lraApplicantEntities;
     }
 
-    public Integer getTimeout() {
-        return timeout;
-    }
-
-    public void setTimeout(Integer timeout) {
-        this.timeout = timeout;
-    }
-
     public Integer getRetryLimit() {
         return retryLimit;
     }
@@ -144,7 +131,6 @@ public class LRAInstanceEntity implements Serializable {
                 "id=" + id +
                 ", uuid='" + uuid + '\'' +
                 ", lraInstanceStatus=" + lraInstanceStatus +
-                ", timeout=" + timeout +
                 ", retryLimit=" + retryLimit +
                 ", lraApplicantEntities=" + lraApplicantEntities +
                 ", createdAt=" + createdAt +

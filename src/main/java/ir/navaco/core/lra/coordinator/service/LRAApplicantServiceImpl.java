@@ -2,11 +2,12 @@ package ir.navaco.core.lra.coordinator.service;
 
 import ir.navaco.core.lra.coordinator.domain.LRAApplicantEntity;
 import ir.navaco.core.lra.coordinator.domain.LRAInstanceEntity;
+import ir.navaco.core.lra.coordinator.enums.LRAApplicantStatus;
 import ir.navaco.core.lra.coordinator.exception.LRAException;
 import ir.navaco.core.lra.coordinator.exception.LRARequestException;
 import ir.navaco.core.lra.coordinator.repository.LRAApplicantRepository;
 import ir.navaco.core.lra.coordinator.utils.MapUtils;
-import ir.navaco.core.lra.coordinator.vo.LRAApplicantVo;
+import ir.navaco.core.lra.coordinator.vo.LRAApplicantRegisterRequestTypeVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -22,21 +23,23 @@ public class LRAApplicantServiceImpl implements LRAApplicantService {
     private LRAInstanceService lraInstanceService;
 
     @Override
-    public LRAApplicantEntity registerLRAApplicant(LRAApplicantVo lraApplicantVo)
+    public LRAApplicantEntity registerLRAApplicant(LRAApplicantRegisterRequestTypeVo lraApplicantRegisterRequestTypeVo)
             throws LRAException.InstanceNotFoundException, LRARequestException.InternalException {
-        LRAInstanceEntity instance = lraInstanceService.findByUuid(lraApplicantVo.getLraInstanceEntityUUID());
+        LRAInstanceEntity instance = lraInstanceService.findByUuid(lraApplicantRegisterRequestTypeVo.getLraInstanceEntityUUID());
         if (instance == null)
-            throw new LRAException.InstanceNotFoundException(lraApplicantVo.getLraInstanceEntityUUID());
+            throw new LRAException.InstanceNotFoundException(lraApplicantRegisterRequestTypeVo.getLraInstanceEntityUUID());
         LRAApplicantEntity lraApplicantEntity = new LRAApplicantEntity();
         lraApplicantEntity.setLraInstanceEntity(instance);
-        lraApplicantEntity.setAppName(lraApplicantVo.getAppName());
-        lraApplicantEntity.setServiceName(lraApplicantVo.getServiceName());
-        lraApplicantEntity.setHttpMethod(lraApplicantVo.getHttpMethod());
-        lraApplicantEntity.setPathVariables(lraApplicantVo.getPathVariables());
-        if (lraApplicantVo.getRequestParameters() != null)
-            lraApplicantEntity.setRequestParameters(MapUtils.mapToString(lraApplicantVo.getRequestParameters()));
-        lraApplicantEntity.setRequestBodyInJSON(lraApplicantVo.getRequestBodyInJSON());
-        lraApplicantEntity.setLraApplicantStatus(lraApplicantVo.getLraApplicantStatus());
+        lraApplicantEntity.setAppName(lraApplicantRegisterRequestTypeVo.getAppName());
+        lraApplicantEntity.setServiceName(lraApplicantRegisterRequestTypeVo.getServiceName());
+        lraApplicantEntity.setHttpMethod(lraApplicantRegisterRequestTypeVo.getHttpMethod());
+        lraApplicantEntity.setPathVariables(lraApplicantRegisterRequestTypeVo.getPathVariables());
+        if (lraApplicantRegisterRequestTypeVo.getRequestParameters() != null)
+            lraApplicantEntity.setRequestParameters(MapUtils.mapToString(lraApplicantRegisterRequestTypeVo.getRequestParameters()));
+        lraApplicantEntity.setRequestBodyInJSON(lraApplicantRegisterRequestTypeVo.getRequestBodyInJSON());
+        lraApplicantEntity.setLraApplicantStatus(LRAApplicantStatus.REGISTERED);
+        lraApplicantEntity.setConnectTimeout(lraApplicantRegisterRequestTypeVo.getConnectTimeout());
+        lraApplicantEntity.setReadTimeout(lraApplicantRegisterRequestTypeVo.getReadTimeout());
         return saveLRAApplicant(lraApplicantEntity);
     }
 

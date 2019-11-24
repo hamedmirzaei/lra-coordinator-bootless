@@ -3,24 +3,13 @@ package ir.navaco.core.lra.coordinator.vo;
 import java.io.Serializable;
 
 public class LRAInstanceCreateRequestTypeVo implements Serializable {
-
-    private Integer timeout;
     private Integer retryLimit;
 
     public LRAInstanceCreateRequestTypeVo() {
     }
 
-    public LRAInstanceCreateRequestTypeVo(Integer timeout, Integer retryLimit) {
-        this.timeout = timeout;
+    public LRAInstanceCreateRequestTypeVo(Integer retryLimit) {
         this.retryLimit = retryLimit;
-    }
-
-    public Integer getTimeout() {
-        return timeout;
-    }
-
-    public void setTimeout(Integer timeout) {
-        this.timeout = timeout;
     }
 
     public Integer getRetryLimit() {
@@ -34,7 +23,6 @@ public class LRAInstanceCreateRequestTypeVo implements Serializable {
     @Override
     public String toString() {
         return "LRAInstanceCreateRequestTypeVo{" +
-                "timeout=" + timeout +
                 ", retryLimit=" + retryLimit +
                 '}';
     }

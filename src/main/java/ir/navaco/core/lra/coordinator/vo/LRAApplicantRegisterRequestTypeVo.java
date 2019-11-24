@@ -1,11 +1,9 @@
 package ir.navaco.core.lra.coordinator.vo;
 
-import ir.navaco.core.lra.coordinator.enums.LRAApplicantStatus;
-
 import java.io.Serializable;
 import java.util.Map;
 
-public class LRAApplicantVo implements Serializable {
+public class LRAApplicantRegisterRequestTypeVo implements Serializable {
 
     private String lraInstanceEntityUUID;
     private String appName;
@@ -14,12 +12,13 @@ public class LRAApplicantVo implements Serializable {
     private String pathVariables;
     private Map<String, String> requestParameters;
     private String requestBodyInJSON;
-    private LRAApplicantStatus lraApplicantStatus;
+    private Integer connectTimeout;
+    private Integer readTimeout;
 
-    public LRAApplicantVo() {
+    public LRAApplicantRegisterRequestTypeVo() {
     }
 
-    public LRAApplicantVo(String lraInstanceEntityUUID, String appName, String serviceName, String httpMethod, String pathVariables, Map<String, String> requestParameters, String requestBodyInJSON, LRAApplicantStatus lraApplicantStatus) {
+    public LRAApplicantRegisterRequestTypeVo(String lraInstanceEntityUUID, String appName, String serviceName, String httpMethod, String pathVariables, Map<String, String> requestParameters, String requestBodyInJSON, Integer connectTimeout, Integer readTimeout) {
         this.lraInstanceEntityUUID = lraInstanceEntityUUID;
         this.appName = appName;
         this.serviceName = serviceName;
@@ -27,7 +26,8 @@ public class LRAApplicantVo implements Serializable {
         this.pathVariables = pathVariables;
         this.requestParameters = requestParameters;
         this.requestBodyInJSON = requestBodyInJSON;
-        this.lraApplicantStatus = lraApplicantStatus;
+        this.connectTimeout = connectTimeout;
+        this.readTimeout = readTimeout;
     }
 
     public String getLraInstanceEntityUUID() {
@@ -86,17 +86,25 @@ public class LRAApplicantVo implements Serializable {
         this.requestBodyInJSON = requestBodyInJSON;
     }
 
-    public LRAApplicantStatus getLraApplicantStatus() {
-        return lraApplicantStatus;
+    public Integer getConnectTimeout() {
+        return connectTimeout;
     }
 
-    public void setLraApplicantStatus(LRAApplicantStatus lraApplicantStatus) {
-        this.lraApplicantStatus = lraApplicantStatus;
+    public void setConnectTimeout(Integer connectTimeout) {
+        this.connectTimeout = connectTimeout;
+    }
+
+    public Integer getReadTimeout() {
+        return readTimeout;
+    }
+
+    public void setReadTimeout(Integer readTimeout) {
+        this.readTimeout = readTimeout;
     }
 
     @Override
     public String toString() {
-        return "LRAApplicantVo{" +
+        return "LRAApplicantRegisterRequestTypeVo{" +
                 "lraInstanceEntityUUID='" + lraInstanceEntityUUID + '\'' +
                 ", appName='" + appName + '\'' +
                 ", serviceName='" + serviceName + '\'' +
@@ -104,7 +112,8 @@ public class LRAApplicantVo implements Serializable {
                 ", pathVariables='" + pathVariables + '\'' +
                 ", requestParameters=" + requestParameters +
                 ", requestBodyInJSON='" + requestBodyInJSON + '\'' +
-                ", lraApplicantStatus=" + lraApplicantStatus +
+                ", connectTimeout=" + connectTimeout +
+                ", readTimeout=" + readTimeout +
                 '}';
     }
 }

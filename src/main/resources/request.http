@@ -6,7 +6,6 @@ POST http://localhost:8085/lra-coordinator/instance
 Content-Type: application/json
 
 {
-  "timeout" : "20000",
   "retryLimit" : "5"
 }
 ###
@@ -35,7 +34,9 @@ Content-Type: application/json
     "param1": "value1"
   },
   "requestBodyInJSON": "{ \"factoryName\" : \"type1\" }",
-  "lraApplicantStatus": "REGISTERED"
+  "lraApplicantStatus": "REGISTERED",
+  "connectTimeout" : "20000",
+  "readTimeout" : "20000"
 }
 ###
 # register a post applicant

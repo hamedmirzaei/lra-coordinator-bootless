@@ -1,8 +1,6 @@
 package ir.navaco.core.lra.coordinator.api;
 
-import ir.navaco.core.lra.coordinator.domain.LRAApplicantEntity;
 import ir.navaco.core.lra.coordinator.domain.LRAInstanceEntity;
-import ir.navaco.core.lra.coordinator.enums.LRAApplicantStatus;
 import ir.navaco.core.lra.coordinator.exception.LRAException;
 import ir.navaco.core.lra.coordinator.exception.LRARequestException;
 import ir.navaco.core.lra.coordinator.service.*;
@@ -64,36 +62,36 @@ public class LRACoordinatorApi {
      * to a specific LRA instance. In case of LRA cancel action, all the
      * applicants registered to it will be notified
      *
-     * @param lraApplicantVo body of request which is the details about applicant
+     * @param lraApplicantRegisterRequestTypeVo body of request which is the details about applicant
      * @return failure or success message based on HttpStatus
      * @throws LRAException.InstanceNotFoundException
      */
     @PostMapping(value = "/applicant", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<LRAApplicantRegisterResponseTypeVo> registerApplicant(@RequestBody LRAApplicantVo lraApplicantVo) throws LRAException.InstanceNotFoundException, LRARequestException.InternalException {
-        LRAApplicantEntity lraApplicantEntity = lraApplicantService.registerLRAApplicant(lraApplicantVo);
-        //cancelHandlerService.doCompensation(lraApplicantEntity);//TODO for testing purpose
-        return ResponseEntity.ok(new LRAApplicantRegisterResponseTypeVo("Successfully registered: " + lraApplicantVo));
+    public ResponseEntity<LRAApplicantRegisterResponseTypeVo> registerApplicant(@RequestBody LRAApplicantRegisterRequestTypeVo lraApplicantRegisterRequestTypeVo) throws LRAException.InstanceNotFoundException, LRARequestException.InternalException {
+        lraApplicantService.registerLRAApplicant(lraApplicantRegisterRequestTypeVo);
+        return ResponseEntity.ok(new LRAApplicantRegisterResponseTypeVo("Successfully registered: " + lraApplicantRegisterRequestTypeVo));
     }
 
     /**
-     * for testing purpose, to get a JSON format of a LRAApplicantVo object
+     * for testing purpose, to get a JSON format of a LRAApplicantRegisterRequestTypeVo object
      *
-     * @return JSON format of LRAApplicantVo object
+     * @return JSON format of LRAApplicantRegisterRequestTypeVo object
      */
     @GetMapping(value = "/applicant", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<LRAApplicantVo> getApplicant() {
-        LRAApplicantVo lraApplicantVo = new LRAApplicantVo();
-        lraApplicantVo.setAppName("state-machine");
-        lraApplicantVo.setHttpMethod("GET");
-        lraApplicantVo.setLraInstanceEntityUUID("this-is-sample-uuid");
-        lraApplicantVo.setPathVariables("123/456/789");
-        lraApplicantVo.setServiceName("state-machine-health-v1");
+    public ResponseEntity<LRAApplicantRegisterRequestTypeVo> getApplicant() {
+        LRAApplicantRegisterRequestTypeVo lraApplicantRegisterRequestTypeVo = new LRAApplicantRegisterRequestTypeVo();
+        lraApplicantRegisterRequestTypeVo.setAppName("state-machine");
+        lraApplicantRegisterRequestTypeVo.setHttpMethod("GET");
+        lraApplicantRegisterRequestTypeVo.setLraInstanceEntityUUID("this-is-sample-uuid");
+        lraApplicantRegisterRequestTypeVo.setPathVariables("123/456/789");
+        lraApplicantRegisterRequestTypeVo.setServiceName("state-machine-health-v1");
         Map<String, String> requestParameters = new HashMap<>();
         requestParameters.put("param1", "value1");
-        lraApplicantVo.setRequestParameters(requestParameters);
-        lraApplicantVo.setRequestBodyInJSON("{ \"factoryName\" : \"type1\" }");
-        lraApplicantVo.setLraApplicantStatus(LRAApplicantStatus.REGISTERED);
-        return ResponseEntity.ok(lraApplicantVo);
+        lraApplicantRegisterRequestTypeVo.setRequestParameters(requestParameters);
+        lraApplicantRegisterRequestTypeVo.setRequestBodyInJSON("{ \"factoryName\" : \"type1\" }");
+        lraApplicantRegisterRequestTypeVo.setConnectTimeout(20000);
+        lraApplicantRegisterRequestTypeVo.setReadTimeout(20000);
+        return ResponseEntity.ok(lraApplicantRegisterRequestTypeVo);
     }
 
     @Autowired
