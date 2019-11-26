@@ -1,47 +1,41 @@
 package ir.navaco.core.lra.coordinator.exception.advice;
 
 
+import ir.navaco.core.lra.coordinator.vo.LRAResponseVo;
 import ir.navaco.core.lra.coordinator.exception.LRAException;
 import ir.navaco.core.lra.coordinator.exception.LRARequestException;
 import ir.navaco.core.lra.coordinator.exception.SystemException;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import static org.springframework.http.HttpStatus.UNPROCESSABLE_ENTITY;
-
 @ControllerAdvice
 public class LRACoordinatorApiAdvice extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler({LRARequestException.FieldNotExistException.class})
-    public ResponseEntity<String> handleFieldNotExistException(LRARequestException.FieldNotExistException e) {
-        return error(UNPROCESSABLE_ENTITY, e);
-    }
-
     @ExceptionHandler({LRARequestException.BadSizeMapException.class})
-    public ResponseEntity<String> handleBadSizeMapException(LRARequestException.BadSizeMapException e) {
-        return error(UNPROCESSABLE_ENTITY, e);
+    public ResponseEntity<LRAResponseVo> handleBadSizeMapException(LRARequestException.BadSizeMapException e) {
+        return ResponseEntity.ok(new LRAResponseVo("LRA-0001", e.getMessage(), 1l));
     }
 
     @ExceptionHandler({SystemException.InternalException.class})
-    public ResponseEntity<String> handleInternalException(SystemException.InternalException e) {
-        return error(UNPROCESSABLE_ENTITY, e);
+    public ResponseEntity<LRAResponseVo> handleInternalException(SystemException.InternalException e) {
+        return ResponseEntity.ok(new LRAResponseVo("LRA-0002", e.getMessage(), 2l));
     }
 
     @ExceptionHandler({SystemException.PropertyFileException.class})
-    public ResponseEntity<String> handlePropertyFileException(SystemException.PropertyFileException e) {
-        return error(UNPROCESSABLE_ENTITY, e);
+    public ResponseEntity<LRAResponseVo> handlePropertyFileException(SystemException.PropertyFileException e) {
+        return ResponseEntity.ok(new LRAResponseVo("LRA-0003", e.getMessage(), 3l));
     }
 
     @ExceptionHandler({LRAException.InstanceNotFoundException.class})
-    public ResponseEntity<String> handleInstanceNotFoundException(LRAException.InstanceNotFoundException e) {
-        return error(UNPROCESSABLE_ENTITY, e);
+    public ResponseEntity<LRAResponseVo> handleInstanceNotFoundException(LRAException.InstanceNotFoundException e) {
+        return ResponseEntity.ok(new LRAResponseVo("LRA-0004", e.getMessage(), 4l));
     }
 
-    private ResponseEntity<String> error(HttpStatus status, Exception e) {
-        return ResponseEntity.status(status).body(e.getMessage());
+    @ExceptionHandler({LRARequestException.FieldNotExistException.class})
+    public ResponseEntity<LRAResponseVo> handleFieldNotExistException(LRARequestException.FieldNotExistException e) {
+        return ResponseEntity.ok(new LRAResponseVo("LRA-0005", e.getMessage(), 5l));
     }
 
 }

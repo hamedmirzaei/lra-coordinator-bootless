@@ -53,3 +53,7 @@ Content-Type: application/json
   "requestBodyInJSON": "{ \"factoryName\" : \"type1\" }"
 }
 ###
+
+GET http://localhost:8085/lra-coordinator/test
+
+###

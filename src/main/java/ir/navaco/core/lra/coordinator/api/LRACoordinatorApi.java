@@ -4,12 +4,17 @@ import ir.navaco.core.lra.coordinator.domain.LRAInstanceEntity;
 import ir.navaco.core.lra.coordinator.exception.LRAException;
 import ir.navaco.core.lra.coordinator.exception.SystemException;
 import ir.navaco.core.lra.coordinator.service.*;
+import ir.navaco.core.lra.coordinator.utils.HttpUtils;
 import ir.navaco.core.lra.coordinator.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -39,9 +44,10 @@ public class LRACoordinatorApi {
      * @return UUID of LRA instance or failure message based on HttpStatus
      */
     @PostMapping(value = "/instance", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<LRAInstanceCreateResponseTypeVo> createLRA(@RequestBody LRAInstanceCreateRequestTypeVo lraInstanceCreateRequestTypeVo) throws SystemException.InternalException {
+    public ResponseEntity<LRAResponseVo> createLRA(@RequestBody LRAInstanceCreateRequestTypeVo lraInstanceCreateRequestTypeVo) throws SystemException.InternalException {
         LRAInstanceEntity lraInstanceEntity = lraInstanceService.createLRAInstance(lraInstanceCreateRequestTypeVo);
-        return ResponseEntity.ok(new LRAInstanceCreateResponseTypeVo(lraInstanceEntity.getUuid()));
+        LRAInstanceCreateResponseTypeVo result = new LRAInstanceCreateResponseTypeVo(lraInstanceEntity.getUuid());
+        return ResponseEntity.ok(new LRAResponseVo(result));
     }
 
     /**
@@ -52,9 +58,10 @@ public class LRACoordinatorApi {
      * @throws LRAException.InstanceNotFoundException
      */
     @PostMapping(value = "/instance/cancel", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<LRAInstanceCancelResponseTypeVo> cancelLRA(@RequestBody LRAInstanceCancelRequestTypeVo lraInstanceCancelRequestTypeVo) throws LRAException.InstanceNotFoundException, SystemException.InternalException {
+    public ResponseEntity<LRAResponseVo> cancelLRA(@RequestBody LRAInstanceCancelRequestTypeVo lraInstanceCancelRequestTypeVo) throws LRAException.InstanceNotFoundException, SystemException.InternalException {
         lraInstanceService.cancelLRAInstance(lraInstanceCancelRequestTypeVo);
-        return ResponseEntity.ok(new LRAInstanceCancelResponseTypeVo("Successfully registered for cancel: " + lraInstanceCancelRequestTypeVo));
+        LRAInstanceCancelResponseTypeVo result = new LRAInstanceCancelResponseTypeVo("Successfully registered for cancel: " + lraInstanceCancelRequestTypeVo);
+        return ResponseEntity.ok(new LRAResponseVo(result));
     }
 
     /**
@@ -67,9 +74,10 @@ public class LRACoordinatorApi {
      * @throws LRAException.InstanceNotFoundException
      */
     @PostMapping(value = "/applicant", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<LRAApplicantRegisterResponseTypeVo> registerApplicant(@RequestBody LRAApplicantRegisterRequestTypeVo lraApplicantRegisterRequestTypeVo) throws LRAException.InstanceNotFoundException, SystemException.InternalException {
+    public ResponseEntity<LRAResponseVo> registerApplicant(@RequestBody LRAApplicantRegisterRequestTypeVo lraApplicantRegisterRequestTypeVo) throws LRAException.InstanceNotFoundException, SystemException.InternalException {
         lraApplicantService.registerLRAApplicant(lraApplicantRegisterRequestTypeVo);
-        return ResponseEntity.ok(new LRAApplicantRegisterResponseTypeVo("Successfully registered: " + lraApplicantRegisterRequestTypeVo));
+        LRAApplicantRegisterResponseTypeVo result = new LRAApplicantRegisterResponseTypeVo("Successfully registered: " + lraApplicantRegisterRequestTypeVo);
+        return ResponseEntity.ok(new LRAResponseVo(result));
     }
 
     /**
@@ -78,7 +86,7 @@ public class LRACoordinatorApi {
      * @return JSON format of LRAApplicantRegisterRequestTypeVo object
      */
     @GetMapping(value = "/applicant", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<LRAApplicantRegisterRequestTypeVo> getApplicant() {
+    public ResponseEntity<LRAResponseVo> getApplicant() {
         LRAApplicantRegisterRequestTypeVo lraApplicantRegisterRequestTypeVo = new LRAApplicantRegisterRequestTypeVo();
         lraApplicantRegisterRequestTypeVo.setAppName("state-machine");
         lraApplicantRegisterRequestTypeVo.setHttpMethod("GET");
@@ -91,7 +99,34 @@ public class LRACoordinatorApi {
         lraApplicantRegisterRequestTypeVo.setRequestBodyInJSON("{ \"factoryName\" : \"type1\" }");
         lraApplicantRegisterRequestTypeVo.setConnectTimeout(20000);
         lraApplicantRegisterRequestTypeVo.setReadTimeout(20000);
-        return ResponseEntity.ok(lraApplicantRegisterRequestTypeVo);
+        return ResponseEntity.ok(new LRAResponseVo(lraApplicantRegisterRequestTypeVo));
+    }
+
+    @GetMapping(value = "/test", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Object test() {
+        String json = "{\n" +
+                "  \"lraInstanceEntityUUID\": \"this-is-sample-uuid\",\n" +
+                "  \"appName\": \"state-machine\",\n" +
+                "  \"serviceName\": \"state-machine-health-v1\",\n" +
+                "  \"httpMethod\": \"GET\",\n" +
+                "  \"pathVariables\": \"123/456/789\",\n" +
+                "  \"requestParameters\": {\n" +
+                "    \"param1\": \"value1\"\n" +
+                "  },\n" +
+                "  \"requestBodyInJSON\": \"{ \\\"factoryName\\\" : \\\"type1\\\" }\",\n" +
+                "  \"lraApplicantStatus\": \"REGISTERED\",\n" +
+                "  \"connectTimeout\" : \"20000\",\n" +
+                "  \"readTimeout\" : \"20000\"\n" +
+                "}";
+        RestTemplate restTemplate = new RestTemplate();
+        HttpEntity<String> requestEntity = HttpUtils.createHeader(json, HttpMethod.POST);
+        ResponseEntity<LRAResponseVo> response = restTemplate.exchange(
+                "http://localhost:8085/lra-coordinator/applicant",
+                HttpMethod.POST,
+                requestEntity,
+                new ParameterizedTypeReference<LRAResponseVo>() {
+                });
+        return response;
     }
 
     @Autowired
