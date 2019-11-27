@@ -86,7 +86,7 @@ public class LRACoordinatorApi {
      * @return JSON format of LRAApplicantRegisterRequestTypeVo object
      */
     @GetMapping(value = "/applicant", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<LRAResponseVo> getApplicant() {
+    public ResponseEntity<LRAApplicantRegisterRequestTypeVo> getApplicant() {
         LRAApplicantRegisterRequestTypeVo lraApplicantRegisterRequestTypeVo = new LRAApplicantRegisterRequestTypeVo();
         lraApplicantRegisterRequestTypeVo.setAppName("state-machine");
         lraApplicantRegisterRequestTypeVo.setHttpMethod("GET");
@@ -99,7 +99,7 @@ public class LRACoordinatorApi {
         lraApplicantRegisterRequestTypeVo.setRequestBodyInJSON("{ \"factoryName\" : \"type1\" }");
         lraApplicantRegisterRequestTypeVo.setConnectTimeout(20000);
         lraApplicantRegisterRequestTypeVo.setReadTimeout(20000);
-        return ResponseEntity.ok(new LRAResponseVo(lraApplicantRegisterRequestTypeVo));
+        return ResponseEntity.ok(lraApplicantRegisterRequestTypeVo);
     }
 
     @GetMapping(value = "/test", produces = MediaType.APPLICATION_JSON_VALUE)

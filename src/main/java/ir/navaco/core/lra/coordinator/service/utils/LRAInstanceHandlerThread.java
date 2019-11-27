@@ -10,10 +10,10 @@ import ir.navaco.core.lra.coordinator.service.LRAInstanceService;
 import ir.navaco.core.lra.coordinator.utils.Constants;
 import ir.navaco.core.lra.coordinator.utils.HttpUtils;
 import ir.navaco.core.lra.coordinator.utils.MapUtils;
+import ir.navaco.core.lra.coordinator.vo.LRAApplicantCompensationResponseTypeVo;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
@@ -96,17 +96,17 @@ public class LRAInstanceHandlerThread implements Callable<Boolean> {
             HttpMethod method = HttpMethod.resolve(lraApplicantEntity.getHttpMethod());
             HttpEntity<String> requestEntity = HttpUtils.createHeader(lraApplicantEntity.getRequestBodyInJSON(), method);
 
-            ResponseEntity<Object> response = restTemplate.exchange(
+            ResponseEntity<LRAApplicantCompensationResponseTypeVo> response = restTemplate.exchange(
                     url,
                     method,
                     requestEntity,
-                    new ParameterizedTypeReference<Object>() {
+                    new ParameterizedTypeReference<LRAApplicantCompensationResponseTypeVo>() {
                     });
-            //if response.StatusCode = 200 then every thing is Ok, not otherwise
+            //if response.messageCode = 'LRA-0000' then every thing is Ok, not otherwise
             //remember that compensation actions should not return anything, they
             //are just business code which we expect to return a StatusCode of 200
             //or something else (like 422)
-            if (response.getStatusCode() == HttpStatus.OK) {
+            if ("LRA-0000".equals(response.getBody().getMessageCode())) {
                 return true;
             }
         } catch (Exception e) {

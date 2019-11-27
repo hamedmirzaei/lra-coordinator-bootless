@@ -34,9 +34,8 @@ Content-Type: application/json
     "param1": "value1"
   },
   "requestBodyInJSON": "{ \"factoryName\" : \"type1\" }",
-  "lraApplicantStatus": "REGISTERED",
-  "connectTimeout" : "20000",
-  "readTimeout" : "20000"
+  "connectTimeout": 20000,
+  "readTimeout": 20000
 }
 ###
 # register a post applicant
