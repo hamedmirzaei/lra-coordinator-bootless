@@ -28,6 +28,10 @@ public class CancelHandlerThread implements Runnable {
         this.lraApplicantExecutionService = lraApplicantExecutionService;
     }
 
+    /**
+     * the background thread for extracting CANCEL_REQUESTs and
+     * processing them for compensation operation
+     */
     public void run() {
         int waitTime = Constants.lraProperties.getCancelHandlerWaitTimeRate(); // wait for 4 secs
         while (true) {
@@ -51,6 +55,11 @@ public class CancelHandlerThread implements Runnable {
         }
     }
 
+    /**
+     * this method process all the current CANCEL_REQUEST LRAInstances
+     *
+     * @param lraInstanceEntities list of LRAInstances
+     */
     private void process(List<LRAInstanceEntity> lraInstanceEntities) {
         for (LRAInstanceEntity lraInstanceEntity : lraInstanceEntities) {
             Future<Boolean> resultFuture = executor.submit(

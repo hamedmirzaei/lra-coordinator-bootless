@@ -102,6 +102,10 @@ public class LRACoordinatorApi {
         return ResponseEntity.ok(lraApplicantRegisterRequestTypeVo);
     }
 
+    /**
+     * this is for testing purposes
+     * @return
+     */
     @GetMapping(value = "/test", produces = MediaType.APPLICATION_JSON_VALUE)
     public Object test() {
         String json = "{\n" +

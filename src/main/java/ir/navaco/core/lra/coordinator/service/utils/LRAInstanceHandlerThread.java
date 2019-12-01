@@ -57,6 +57,13 @@ public class LRAInstanceHandlerThread implements Callable<Boolean> {
         return false;
     }
 
+    /**
+     * this method tries to call all rest requests associated with
+     * all applicants of input LRAInstance
+     *
+     * @param lraInstanceEntity contains all the info about configs and applicants of LRAInstance
+     * @return true in case of success and false otherwise
+     */
     private Boolean doCompensation(LRAInstanceEntity lraInstanceEntity) {
         for (int i = 0; i < lraInstanceEntity.getRetryLimit(); i++) {
             LRAInstanceExecutionEntity lraInstanceExecutionEntity = new LRAInstanceExecutionEntity(LocalDateTime.now(), lraInstanceEntity);
@@ -92,7 +99,13 @@ public class LRAInstanceHandlerThread implements Callable<Boolean> {
         return false;
     }
 
-    public boolean doCompensation(LRAApplicantEntity lraApplicantEntity) {
+    /**
+     * this method uses edge-server to call rest request
+     *
+     * @param lraApplicantEntity contains all the info about rest provider
+     * @return true in case of success and false otherwise
+     */
+    public Boolean doCompensation(LRAApplicantEntity lraApplicantEntity) {
         LRAApplicantExecutionEntity lraApplicantExecutionEntity = new LRAApplicantExecutionEntity(LocalDateTime.now(), lraApplicantEntity);
         try {
             RestTemplate restTemplate = restTemplate(lraApplicantEntity.getConnectTimeout(), lraApplicantEntity.getReadTimeout());
