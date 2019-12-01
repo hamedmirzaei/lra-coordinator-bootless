@@ -37,18 +37,14 @@ public class LRAApplicantExecutionEntity implements Serializable {
     @JoinColumn(name = "LRA_APPLICANT", referencedColumnName = "ID")
     private LRAApplicantEntity lraApplicantEntity;
 
+    @Column(name = "MESSAGE")
+    private String message;
+
     public LRAApplicantExecutionEntity() {
     }
 
     public LRAApplicantExecutionEntity(LocalDateTime startDate, LRAApplicantEntity lraApplicantEntity) {
         this.startDate = startDate;
-        this.lraApplicantEntity = lraApplicantEntity;
-    }
-
-    public LRAApplicantExecutionEntity(LocalDateTime startDate, LocalDateTime endDate, LRAApplicantStatus lraApplicantStatus, LRAApplicantEntity lraApplicantEntity) {
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.lraApplicantStatus = lraApplicantStatus;
         this.lraApplicantEntity = lraApplicantEntity;
     }
 
@@ -92,6 +88,14 @@ public class LRAApplicantExecutionEntity implements Serializable {
         this.lraApplicantEntity = lraApplicantEntity;
     }
 
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
     @Override
     public String toString() {
         return "LRAApplicantExecutionEntity{" +
@@ -100,6 +104,7 @@ public class LRAApplicantExecutionEntity implements Serializable {
                 ", endDate=" + endDate +
                 ", lraApplicantStatus=" + lraApplicantStatus +
                 ", lraApplicantEntity=" + lraApplicantEntity +
+                ", message=" + message +
                 '}';
     }
 

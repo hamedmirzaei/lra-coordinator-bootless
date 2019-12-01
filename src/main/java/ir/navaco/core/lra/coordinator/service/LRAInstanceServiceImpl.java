@@ -35,7 +35,7 @@ public class LRAInstanceServiceImpl implements LRAInstanceService {
     public void cancelLRAInstance(LRAInstanceCancelRequestTypeVo lraInstanceCancelRequestTypeVo)
             throws LRAException.InstanceNotFoundException, SystemException.InternalException,
             LRAException.InstanceAlreadyCanceledException, LRAException.InstanceUnderCancelException {
-        
+
         LRAInstanceEntity lraInstanceEntity = findByUuid(lraInstanceCancelRequestTypeVo.getUuid());
         if (lraInstanceEntity == null)
             throw new LRAException.InstanceNotFoundException(lraInstanceCancelRequestTypeVo.getUuid());

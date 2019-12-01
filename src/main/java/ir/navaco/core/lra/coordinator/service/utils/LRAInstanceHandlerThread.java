@@ -126,12 +126,14 @@ public class LRAInstanceHandlerThread implements Callable<Boolean> {
             //remember that compensation actions should not return anything, they
             //are just business code which we expect to return a StatusCode of 200
             //or something else (like 422)
+            lraApplicantExecutionEntity.setMessage(response.getBody().getMessageCode());
             if ("LRA-0000".equals(response.getBody().getMessageCode())) {
                 successLRAApplicantExecutionEntity(lraApplicantExecutionEntity);
                 return true;
             }
         } catch (Exception e) {
             e.printStackTrace();
+            lraApplicantExecutionEntity.setMessage(e.getMessage());
         }
         failedLRAApplicantExecutionEntity(lraApplicantExecutionEntity);
         return false;

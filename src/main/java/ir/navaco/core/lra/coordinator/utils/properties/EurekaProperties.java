@@ -31,7 +31,7 @@ public class EurekaProperties {
     public String getEdgeServerURL() {
         if (this.edgeServerURL != null)
             return this.edgeServerURL;
-        String temp = properties.getProperty("base.path");
+        String temp = properties.getProperty("edgeserver.url");
         this.edgeServerURL = temp.endsWith("/") ? temp : temp + "/";
         return this.edgeServerURL;
     }
