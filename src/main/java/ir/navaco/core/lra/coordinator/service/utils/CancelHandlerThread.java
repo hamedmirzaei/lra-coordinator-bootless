@@ -29,7 +29,7 @@ public class CancelHandlerThread implements Runnable {
     }
 
     public void run() {
-        int waitTime = 5; // 10 secs
+        int waitTime = Constants.lraProperties.getCancelHandlerWaitTimeRate(); // wait for 4 secs
         while (true) {
             executor = new ThreadPoolExecutor(Constants.lraProperties.getCorePoolSize(),
                     Constants.lraProperties.getMaximumPoolSize(), 0L,
@@ -39,13 +39,13 @@ public class CancelHandlerThread implements Runnable {
             if (lraInstanceEntities == null || lraInstanceEntities.size() == 0) {
                 try {
                     Thread.sleep(waitTime * 1000);
-                    waitTime += 5;// add another 10 secs
-                    if (waitTime == 25)
-                        waitTime = 5;
+                    waitTime += Constants.lraProperties.getCancelHandlerWaitTimeRate();// wait more next time
+                    if (waitTime == Constants.lraProperties.getCancelHandlerWaitTimeMax())
+                        waitTime = Constants.lraProperties.getCancelHandlerWaitTimeRate();
                 } catch (InterruptedException e) {
                 }
             } else {
-                waitTime = 5;// reset to 10 secs
+                waitTime = Constants.lraProperties.getCancelHandlerWaitTimeRate();
                 process(lraInstanceEntities);
             }
         }

@@ -11,6 +11,8 @@ public class LRAProperties {
     private Properties properties;
     private Integer corePoolSize;
     private Integer maximumPoolSize;
+    private Integer cancelHandlerWaitTimeRate;
+    private Integer cancelHandlerWaitTimeMax;
 
     public LRAProperties(String classPathFileName) throws SystemException.PropertyFileException {
         initializeAllFields();
@@ -26,23 +28,37 @@ public class LRAProperties {
     }
 
     private void initializeAllFields() {
-        this.corePoolSize = null;
-        this.maximumPoolSize = null;
+        corePoolSize = null;
+        maximumPoolSize = null;
+        cancelHandlerWaitTimeRate = null;
+        cancelHandlerWaitTimeMax = null;
     }
 
     public Integer getCorePoolSize() {
-        if (this.corePoolSize != null)
-            return this.corePoolSize;
-        this.corePoolSize = Integer.parseInt(properties.getProperty("core.pool.size"));
-        return this.corePoolSize;
+        if (corePoolSize != null)
+            return corePoolSize;
+        corePoolSize = Integer.parseInt(properties.getProperty("core.pool.size"));
+        return corePoolSize;
     }
 
     public Integer getMaximumPoolSize() {
-        if (this.maximumPoolSize != null)
-            return this.maximumPoolSize;
-        this.maximumPoolSize = Integer.parseInt(properties.getProperty("maximum.pool.size"));
-        return this.maximumPoolSize;
+        if (maximumPoolSize != null)
+            return maximumPoolSize;
+        maximumPoolSize = Integer.parseInt(properties.getProperty("maximum.pool.size"));
+        return maximumPoolSize;
     }
 
+    public Integer getCancelHandlerWaitTimeRate() {
+        if (cancelHandlerWaitTimeRate != null)
+            return cancelHandlerWaitTimeRate;
+        cancelHandlerWaitTimeRate = Integer.parseInt(properties.getProperty("cancel.handler.wait.time.rate"));
+        return cancelHandlerWaitTimeRate;
+    }
 
+    public Integer getCancelHandlerWaitTimeMax() {
+        if (cancelHandlerWaitTimeMax != null)
+            return cancelHandlerWaitTimeMax;
+        cancelHandlerWaitTimeMax = Integer.parseInt(properties.getProperty("cancel.handler.wait.time.max"));
+        return cancelHandlerWaitTimeMax;
+    }
 }
