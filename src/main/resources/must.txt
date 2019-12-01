@@ -1,6 +1,17 @@
-1. each compensation service should return a LRAApplicantCompensationResponseTypeVo object. The field
-    messageCode = LRA-0000 in case of success and otherwise fail
-2. each service (which is supposed to have a compensation) should receive LRA uuid as its first required input
-   => to register the compensation for LRA instance
-3. the result of calling a specific compensation service for any number of times should be equal to calling it once
-   => in other word a compensation service must be idempotent and assume they might be called more than once
+1. Suppose service A tries to call two separate services B and C in one single transaction with capability of
+    roll-backing. In this case the following conditions must be hold:
+
+    a. Service A should create a LRAInstance before calling any of two services B and C. This step should be done
+    perfectly and for that, you need to check the response of eureka service.
+
+    b. Services B and C should register their corresponding compensations for the created LRAInstance before doing
+    the business logic of service. For this purpose it needs the UUID of LRAInstance from the previous condition.
+    This step should be done perfectly and for that, you need to check the response of eureka service.
+
+    c. Service A should cancel the LRAInstance if there is a situation of roll-back
+
+3. each compensation service should return a LRAApplicantCompensationResponseTypeVo object. The field messageCode
+    should be equal to "LRA-0000" in case of success and otherwise in case of failure
+
+4. the result of calling a specific compensation service for multiple times must be equal to calling it once
+    => in other word a compensation service must be idempotent and assume they might be called more than once

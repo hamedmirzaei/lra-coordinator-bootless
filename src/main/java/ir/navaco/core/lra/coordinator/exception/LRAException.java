@@ -16,6 +16,20 @@ public class LRAException {
         }
     }
 
+    // LRA instance processed before
+    public static class InstanceAlreadyProcessedException extends BaseException {
+        private String uuid;
+
+        public InstanceAlreadyProcessedException(String uuid) {
+            super("The LRA instance with uuid = \"" + uuid + "\" is already processed and you cant register any applicant");
+            this.uuid = uuid;
+        }
+
+        public String getUuid() {
+            return uuid;
+        }
+    }
+
     // LRA instance is under cancel operation
     public static class InstanceUnderCancelException extends BaseException {
         private String uuid;

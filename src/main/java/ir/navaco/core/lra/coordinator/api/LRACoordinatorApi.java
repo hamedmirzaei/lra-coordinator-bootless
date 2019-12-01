@@ -74,7 +74,7 @@ public class LRACoordinatorApi {
      * @throws LRAException.InstanceNotFoundException
      */
     @PostMapping(value = "/applicant", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<LRAResponseVo> registerApplicant(@RequestBody LRAApplicantRegisterRequestTypeVo lraApplicantRegisterRequestTypeVo) throws LRAException.InstanceNotFoundException, SystemException.InternalException {
+    public ResponseEntity<LRAResponseVo> registerApplicant(@RequestBody LRAApplicantRegisterRequestTypeVo lraApplicantRegisterRequestTypeVo) throws LRAException.InstanceNotFoundException, SystemException.InternalException, LRAException.InstanceAlreadyProcessedException {
         lraApplicantService.registerLRAApplicant(lraApplicantRegisterRequestTypeVo);
         LRAApplicantRegisterResponseTypeVo result = new LRAApplicantRegisterResponseTypeVo("Successfully registered: " + lraApplicantRegisterRequestTypeVo);
         return ResponseEntity.ok(new LRAResponseVo(result));
@@ -104,6 +104,7 @@ public class LRACoordinatorApi {
 
     /**
      * this is for testing purposes
+     *
      * @return
      */
     @GetMapping(value = "/test", produces = MediaType.APPLICATION_JSON_VALUE)

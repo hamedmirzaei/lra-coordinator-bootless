@@ -8,7 +8,7 @@ import ir.navaco.core.lra.coordinator.vo.LRAApplicantRegisterRequestTypeVo;
 public interface LRAApplicantService {
 
     LRAApplicantEntity registerLRAApplicant(LRAApplicantRegisterRequestTypeVo lraApplicantRegisterRequestTypeVo)
-            throws LRAException.InstanceNotFoundException, SystemException.InternalException;
+            throws LRAException.InstanceNotFoundException, SystemException.InternalException, LRAException.InstanceAlreadyProcessedException;
 
     LRAApplicantEntity updateLRAApplicant(LRAApplicantEntity lraApplicantEntity) throws SystemException.InternalException;
 

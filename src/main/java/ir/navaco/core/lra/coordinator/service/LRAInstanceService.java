@@ -25,4 +25,6 @@ public interface LRAInstanceService {
 
     LRAInstanceEntity saveLRAInstance(LRAInstanceEntity lraInstanceEntity) throws SystemException.InternalException;
 
+    Boolean isItProcessed(LRAInstanceEntity lraInstanceEntity);
+
 }

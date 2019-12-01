@@ -76,6 +76,13 @@ public class LRAInstanceServiceImpl implements LRAInstanceService {
         }
     }
 
+    @Override
+    public Boolean isItProcessed(LRAInstanceEntity lraInstanceEntity) {
+        if (lraInstanceEntity.getLraInstanceStatus().equals(LRAInstanceStatus.CREATED))
+            return false;
+        return true;
+    }
+
     @Autowired
     public void setLraInstanceRepository(LRAInstanceRepository lraInstanceRepository) {
         this.lraInstanceRepository = lraInstanceRepository;

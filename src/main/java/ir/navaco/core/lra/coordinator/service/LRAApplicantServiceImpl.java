@@ -24,10 +24,12 @@ public class LRAApplicantServiceImpl implements LRAApplicantService {
 
     @Override
     public LRAApplicantEntity registerLRAApplicant(LRAApplicantRegisterRequestTypeVo lraApplicantRegisterRequestTypeVo)
-            throws LRAException.InstanceNotFoundException, SystemException.InternalException {
+            throws LRAException.InstanceNotFoundException, SystemException.InternalException, LRAException.InstanceAlreadyProcessedException {
         LRAInstanceEntity instance = lraInstanceService.findByUuid(lraApplicantRegisterRequestTypeVo.getLraInstanceEntityUUID());
         if (instance == null)
             throw new LRAException.InstanceNotFoundException(lraApplicantRegisterRequestTypeVo.getLraInstanceEntityUUID());
+        if (lraInstanceService.isItProcessed(instance))
+            throw new LRAException.InstanceAlreadyProcessedException(lraApplicantRegisterRequestTypeVo.getLraInstanceEntityUUID());
         LRAApplicantEntity lraApplicantEntity = new LRAApplicantEntity();
         lraApplicantEntity.setLraInstanceEntity(instance);
         lraApplicantEntity.setAppName(lraApplicantRegisterRequestTypeVo.getAppName());

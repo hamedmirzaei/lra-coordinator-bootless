@@ -20,7 +20,7 @@ public class LRACoordinatorApiAdvice extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler({LRARequestException.FieldNotExistException.class})
     public ResponseEntity<LRAResponseVo> handleFieldNotExistException(LRARequestException.FieldNotExistException e) {
-        return ResponseEntity.ok(new LRAResponseVo("LRA-0002", e.getMessage(), 5l));
+        return ResponseEntity.ok(new LRAResponseVo("LRA-0002", e.getMessage(), 2l));
     }
 
     @ExceptionHandler({SystemException.PropertyFileException.class})
@@ -35,17 +35,22 @@ public class LRACoordinatorApiAdvice extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler({LRAException.InstanceUnderCancelException.class})
     public ResponseEntity<LRAResponseVo> handleInstanceUnderCancelException(LRAException.InstanceUnderCancelException e) {
-        return ResponseEntity.ok(new LRAResponseVo("LRA-0005", e.getMessage(), 4l));
+        return ResponseEntity.ok(new LRAResponseVo("LRA-0005", e.getMessage(), 5l));
     }
 
     @ExceptionHandler({LRAException.InstanceAlreadyCanceledException.class})
     public ResponseEntity<LRAResponseVo> handleInstanceAlreadyCanceledException(LRAException.InstanceAlreadyCanceledException e) {
-        return ResponseEntity.ok(new LRAResponseVo("LRA-0006", e.getMessage(), 4l));
+        return ResponseEntity.ok(new LRAResponseVo("LRA-0006", e.getMessage(), 6l));
+    }
+
+    @ExceptionHandler({LRAException.InstanceAlreadyProcessedException.class})
+    public ResponseEntity<LRAResponseVo> handleInstanceAlreadyProcessedException(LRAException.InstanceAlreadyProcessedException e) {
+        return ResponseEntity.ok(new LRAResponseVo("LRA-0007", e.getMessage(), 7l));
     }
 
     @ExceptionHandler({SystemException.InternalException.class})
     public ResponseEntity<LRAResponseVo> handleInternalException(SystemException.InternalException e) {
-        return ResponseEntity.ok(new LRAResponseVo("LRA-0007", e.getMessage(), 2l));
+        return ResponseEntity.ok(new LRAResponseVo("LRA-0008", e.getMessage(), 8l));
     }
 
 }
