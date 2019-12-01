@@ -58,7 +58,7 @@ public class LRACoordinatorApi {
      * @throws LRAException.InstanceNotFoundException
      */
     @PostMapping(value = "/instance/cancel", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<LRAResponseVo> cancelLRA(@RequestBody LRAInstanceCancelRequestTypeVo lraInstanceCancelRequestTypeVo) throws LRAException.InstanceNotFoundException, SystemException.InternalException {
+    public ResponseEntity<LRAResponseVo> cancelLRA(@RequestBody LRAInstanceCancelRequestTypeVo lraInstanceCancelRequestTypeVo) throws LRAException.InstanceNotFoundException, SystemException.InternalException, LRAException.InstanceAlreadyCanceledException, LRAException.InstanceUnderCancelException {
         lraInstanceService.cancelLRAInstance(lraInstanceCancelRequestTypeVo);
         LRAInstanceCancelResponseTypeVo result = new LRAInstanceCancelResponseTypeVo("Successfully registered for cancel: " + lraInstanceCancelRequestTypeVo);
         return ResponseEntity.ok(new LRAResponseVo(result));

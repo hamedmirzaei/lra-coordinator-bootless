@@ -33,11 +33,17 @@ public class LRAInstanceServiceImpl implements LRAInstanceService {
 
     @Override
     public void cancelLRAInstance(LRAInstanceCancelRequestTypeVo lraInstanceCancelRequestTypeVo)
-            throws LRAException.InstanceNotFoundException, SystemException.InternalException {
+            throws LRAException.InstanceNotFoundException, SystemException.InternalException,
+            LRAException.InstanceAlreadyCanceledException, LRAException.InstanceUnderCancelException {
+        
         LRAInstanceEntity lraInstanceEntity = findByUuid(lraInstanceCancelRequestTypeVo.getUuid());
         if (lraInstanceEntity == null)
             throw new LRAException.InstanceNotFoundException(lraInstanceCancelRequestTypeVo.getUuid());
-        //what should be the status? CANCELING or CANCEL_REQUEST: CANCEL_REQUEST
+        if (lraInstanceEntity.getLraInstanceStatus().equals(LRAInstanceStatus.CANCELING))
+            throw new LRAException.InstanceUnderCancelException(lraInstanceCancelRequestTypeVo.getUuid());
+        if (lraInstanceEntity.getLraInstanceStatus().equals(LRAInstanceStatus.CANCELED))
+            throw new LRAException.InstanceAlreadyCanceledException(lraInstanceCancelRequestTypeVo.getUuid());
+
         lraInstanceEntity.setLraInstanceStatus(LRAInstanceStatus.CANCEL_REQUEST);
         updateLRAInstance(lraInstanceEntity);
     }

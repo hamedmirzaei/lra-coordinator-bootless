@@ -15,7 +15,7 @@ public interface LRAInstanceService {
             throws SystemException.InternalException;
 
     void cancelLRAInstance(LRAInstanceCancelRequestTypeVo lraInstanceCancelRequestTypeVo)
-            throws LRAException.InstanceNotFoundException, SystemException.InternalException;
+            throws LRAException.InstanceNotFoundException, SystemException.InternalException, LRAException.InstanceAlreadyCanceledException, LRAException.InstanceUnderCancelException;
 
     LRAInstanceEntity findByUuid(String uuid);
 
