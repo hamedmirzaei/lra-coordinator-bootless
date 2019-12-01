@@ -3,7 +3,9 @@ package ir.navaco.core.lra.coordinator.service.utils;
 import ir.navaco.core.lra.coordinator.domain.LRAInstanceEntity;
 import ir.navaco.core.lra.coordinator.enums.LRAInstanceStatus;
 import ir.navaco.core.lra.coordinator.exception.SystemException;
+import ir.navaco.core.lra.coordinator.service.LRAApplicantExecutionService;
 import ir.navaco.core.lra.coordinator.service.LRAApplicantService;
+import ir.navaco.core.lra.coordinator.service.LRAInstanceExecutionService;
 import ir.navaco.core.lra.coordinator.service.LRAInstanceService;
 import ir.navaco.core.lra.coordinator.utils.Constants;
 
@@ -13,17 +15,21 @@ import java.util.concurrent.*;
 public class CancelHandlerThread implements Runnable {
 
     private LRAInstanceService lraInstanceService;
+    private LRAInstanceExecutionService lraInstanceExecutionService;
     private LRAApplicantService lraApplicantService;
+    private LRAApplicantExecutionService lraApplicantExecutionService;
 
     ExecutorService executor;
 
-    public CancelHandlerThread(LRAInstanceService lraInstanceService, LRAApplicantService lraApplicantService) {
+    public CancelHandlerThread(LRAInstanceService lraInstanceService, LRAInstanceExecutionService lraInstanceExecutionService, LRAApplicantService lraApplicantService, LRAApplicantExecutionService lraApplicantExecutionService) {
         this.lraInstanceService = lraInstanceService;
+        this.lraInstanceExecutionService = lraInstanceExecutionService;
         this.lraApplicantService = lraApplicantService;
+        this.lraApplicantExecutionService = lraApplicantExecutionService;
     }
 
     public void run() {
-        int waitTime = 10; // 10 secs
+        int waitTime = 5; // 10 secs
         while (true) {
             executor = new ThreadPoolExecutor(Constants.lraProperties.getCorePoolSize(),
                     Constants.lraProperties.getMaximumPoolSize(), 0L,
@@ -33,23 +39,22 @@ public class CancelHandlerThread implements Runnable {
             if (lraInstanceEntities == null || lraInstanceEntities.size() == 0) {
                 try {
                     Thread.sleep(waitTime * 1000);
-                    waitTime += 10;// add another 10 secs
-                    if (waitTime == 60)
-                        waitTime = 10;
+                    waitTime += 5;// add another 10 secs
+                    if (waitTime == 25)
+                        waitTime = 5;
                 } catch (InterruptedException e) {
                 }
             } else {
-                waitTime = 10;// reset to 10 secs
+                waitTime = 5;// reset to 10 secs
                 process(lraInstanceEntities);
             }
         }
-        // Do any thread cooldown procedures here, like stop listening to the Queue.
     }
 
     private void process(List<LRAInstanceEntity> lraInstanceEntities) {
         for (LRAInstanceEntity lraInstanceEntity : lraInstanceEntities) {
             Future<Boolean> resultFuture = executor.submit(
-                    new LRAInstanceHandlerThread(lraInstanceService, lraApplicantService, lraInstanceEntity));
+                    new LRAInstanceHandlerThread(lraInstanceService, lraInstanceExecutionService, lraApplicantService, lraApplicantExecutionService, lraInstanceEntity));
             try {
                 Boolean result = resultFuture.get();
                 if (result) {

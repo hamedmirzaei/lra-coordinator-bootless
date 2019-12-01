@@ -41,6 +41,10 @@ public class LRAInstanceEntity implements Serializable {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "lraInstanceEntity")
     private List<LRAApplicantEntity> lraApplicantEntities;
 
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "lraInstanceEntity")
+    private List<LRAInstanceExecutionEntity> lraInstanceExecutionEntities;
+
     @Column(nullable = false, updatable = false, name = "CREATED_AT")
     @Temporal(TemporalType.TIMESTAMP)
     @CreatedDate
@@ -54,19 +58,12 @@ public class LRAInstanceEntity implements Serializable {
     public LRAInstanceEntity() {
     }
 
-    public LRAInstanceEntity(String uuid, LRAInstanceStatus lraInstanceStatus, Integer retryLimit, List<LRAApplicantEntity> lraApplicantEntities) {
+    public LRAInstanceEntity(String uuid, LRAInstanceStatus lraInstanceStatus, Integer retryLimit, List<LRAApplicantEntity> lraApplicantEntities, List<LRAInstanceExecutionEntity> lraInstanceExecutionEntities) {
         this.uuid = uuid;
         this.lraInstanceStatus = lraInstanceStatus;
         this.retryLimit = retryLimit;
         this.lraApplicantEntities = lraApplicantEntities;
-    }
-
-    public LRAInstanceEntity(Long id, String uuid, LRAInstanceStatus lraInstanceStatus, Integer retryLimit, List<LRAApplicantEntity> lraApplicantEntities) {
-        this.id = id;
-        this.uuid = uuid;
-        this.lraInstanceStatus = lraInstanceStatus;
-        this.retryLimit = retryLimit;
-        this.lraApplicantEntities = lraApplicantEntities;
+        this.lraInstanceExecutionEntities = lraInstanceExecutionEntities;
     }
 
     public Long getId() {
@@ -93,6 +90,14 @@ public class LRAInstanceEntity implements Serializable {
         this.lraInstanceStatus = lraInstanceStatus;
     }
 
+    public Integer getRetryLimit() {
+        return retryLimit;
+    }
+
+    public void setRetryLimit(Integer retryLimit) {
+        this.retryLimit = retryLimit;
+    }
+
     public List<LRAApplicantEntity> getLraApplicantEntities() {
         return lraApplicantEntities;
     }
@@ -101,12 +106,12 @@ public class LRAInstanceEntity implements Serializable {
         this.lraApplicantEntities = lraApplicantEntities;
     }
 
-    public Integer getRetryLimit() {
-        return retryLimit;
+    public List<LRAInstanceExecutionEntity> getLraInstanceExecutionEntities() {
+        return lraInstanceExecutionEntities;
     }
 
-    public void setRetryLimit(Integer retryLimit) {
-        this.retryLimit = retryLimit;
+    public void setLraInstanceExecutionEntities(List<LRAInstanceExecutionEntity> lraInstanceExecutionEntities) {
+        this.lraInstanceExecutionEntities = lraInstanceExecutionEntities;
     }
 
     public Date getCreatedAt() {
@@ -132,9 +137,9 @@ public class LRAInstanceEntity implements Serializable {
                 ", uuid='" + uuid + '\'' +
                 ", lraInstanceStatus=" + lraInstanceStatus +
                 ", retryLimit=" + retryLimit +
-                ", lraApplicantEntities=" + lraApplicantEntities +
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +
                 '}';
     }
+
 }

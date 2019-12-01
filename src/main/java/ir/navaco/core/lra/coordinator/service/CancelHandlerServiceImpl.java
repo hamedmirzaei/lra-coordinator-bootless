@@ -13,11 +13,13 @@ public class CancelHandlerServiceImpl implements CancelHandlerService {
     public static final String BEAN_NAME = "cancelHandlerServiceImpl";
 
     private LRAInstanceService lraInstanceService;
+    private LRAInstanceExecutionService lraInstanceExecutionService;
     private LRAApplicantService lraApplicantService;
+    private LRAApplicantExecutionService lraApplicantExecutionService;
 
     @PostConstruct
     public void makeBackgroundThread() {
-        Thread thread = new Thread(new CancelHandlerThread(lraInstanceService, lraApplicantService));
+        Thread thread = new Thread(new CancelHandlerThread(lraInstanceService, lraInstanceExecutionService, lraApplicantService, lraApplicantExecutionService));
         thread.start();
     }
 
@@ -28,9 +30,20 @@ public class CancelHandlerServiceImpl implements CancelHandlerService {
     }
 
     @Autowired
+    @Qualifier(LRAInstanceExecutionServiceImpl.BEAN_NAME)
+    public void setLraInstanceExecutionService(LRAInstanceExecutionService lraInstanceExecutionService) {
+        this.lraInstanceExecutionService = lraInstanceExecutionService;
+    }
+
+    @Autowired
     @Qualifier(LRAApplicantServiceImpl.BEAN_NAME)
     public void setLraApplicantService(LRAApplicantService lraApplicantService) {
         this.lraApplicantService = lraApplicantService;
     }
 
+    @Autowired
+    @Qualifier(LRAApplicantExecutionServiceImpl.BEAN_NAME)
+    public void setLraApplicantExecutionService(LRAApplicantExecutionService lraApplicantExecutionService) {
+        this.lraApplicantExecutionService = lraApplicantExecutionService;
+    }
 }
