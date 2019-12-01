@@ -48,16 +48,18 @@ public class CancelHandlerThread implements Runnable {
 
     private void process(List<LRAInstanceEntity> lraInstanceEntities) {
         for (LRAInstanceEntity lraInstanceEntity : lraInstanceEntities) {
-            lraInstanceEntity.setLraInstanceStatus(LRAInstanceStatus.FAILED);
             Future<Boolean> resultFuture = executor.submit(
                     new LRAInstanceHandlerThread(lraInstanceService, lraApplicantService, lraInstanceEntity));
             try {
                 Boolean result = resultFuture.get();
                 if (result) {
                     lraInstanceEntity.setLraInstanceStatus(LRAInstanceStatus.CANCELED);
+                } else {
+                    lraInstanceEntity.setLraInstanceStatus(LRAInstanceStatus.FAILED);
                 }
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
+                lraInstanceEntity.setLraInstanceStatus(LRAInstanceStatus.FAILED);
             }
             try {
                 lraInstanceService.updateLRAInstance(lraInstanceEntity);

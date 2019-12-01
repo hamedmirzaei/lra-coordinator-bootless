@@ -1,4 +1,5 @@
-1. each compensation service should return HttpStatus.OK in case of success or not HttpStatus.OK in case of error
+1. each compensation service should return a LRAApplicantCompensationResponseTypeVo object. The field
+    messageCode = LRA-0000 in case of success and otherwise fail
 2. each service (which is supposed to have a compensation) should receive LRA uuid as its first required input
    => to register the compensation for LRA instance
 3. the result of calling a specific compensation service for any number of times should be equal to calling it once

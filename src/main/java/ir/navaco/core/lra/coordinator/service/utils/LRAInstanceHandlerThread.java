@@ -60,10 +60,15 @@ public class LRAInstanceHandlerThread implements Callable<Boolean> {
                             lraApplicantEntity.setLraApplicantStatus(LRAApplicantStatus.FAILED);
                             done = false;
                         }
-                        lraApplicantService.updateLRAApplicant(lraApplicantEntity);
                     } catch (Exception e) {
                         e.printStackTrace();
+                        lraApplicantEntity.setLraApplicantStatus(LRAApplicantStatus.FAILED);
                         done = false;
+                    }
+                    try {
+                        lraApplicantService.updateLRAApplicant(lraApplicantEntity);
+                    } catch (SystemException.InternalException e) {
+                        e.printStackTrace();
                     }
                 }
             }

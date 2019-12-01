@@ -1,3 +1,1 @@
-1. cancel all pending cancel requests at the startup of the application
-2. cancel LRA (call applicants) based on timeout, retry-limit and eurekaDiscovery => where is the right place to do it
-3. what was the field requestParameters for?
+1. what was the field requestParameters for?
