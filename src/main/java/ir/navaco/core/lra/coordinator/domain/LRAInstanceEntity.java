@@ -55,17 +55,6 @@ public class LRAInstanceEntity implements Serializable {
     @LastModifiedDate
     private Date updatedAt;
 
-    public LRAInstanceEntity() {
-    }
-
-    public LRAInstanceEntity(String uuid, LRAInstanceStatus lraInstanceStatus, Integer retryLimit, List<LRAApplicantEntity> lraApplicantEntities, List<LRAInstanceExecutionEntity> lraInstanceExecutionEntities) {
-        this.uuid = uuid;
-        this.lraInstanceStatus = lraInstanceStatus;
-        this.retryLimit = retryLimit;
-        this.lraApplicantEntities = lraApplicantEntities;
-        this.lraInstanceExecutionEntities = lraInstanceExecutionEntities;
-    }
-
     public Long getId() {
         return id;
     }

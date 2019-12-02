@@ -2,8 +2,10 @@ package ir.navaco.core.lra.coordinator.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import ir.navaco.core.lra.coordinator.enums.LRAApplicantStatus;
+import ir.navaco.core.lra.coordinator.enums.LRAApplicantType;
 import ir.navaco.core.lra.coordinator.enums.Schema;
 import ir.navaco.core.lra.coordinator.enums.converter.LRAApplicantStatusConverter;
+import ir.navaco.core.lra.coordinator.enums.converter.LRAApplicantTypeConverter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -31,11 +33,14 @@ public class LRAApplicantEntity implements Serializable {
     @JoinColumn(name = "LRA_INSTANCE", referencedColumnName = "ID")
     private LRAInstanceEntity lraInstanceEntity;
 
-    @Column(name = "APP_NAME", nullable = false)
+    @Column(name = "APP_NAME")
     private String appName;
 
-    @Column(name = "SERVICE_NAME", nullable = false)
+    @Column(name = "SERVICE_NAME")
     private String serviceName;
+
+    @Column(name = "BASE_URL")
+    private String baseUrl;
 
     @Column(name = "HTTP_METHOD", nullable = false)
     private String httpMethod;
@@ -59,6 +64,10 @@ public class LRAApplicantEntity implements Serializable {
     @Column(name = "READ_TIMEOUT")
     private Integer readTimeout;
 
+    @Column(name = "TYPE", nullable = false)
+    @Convert(converter = LRAApplicantTypeConverter.class)
+    private LRAApplicantType lraApplicantType;
+
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "lraApplicantEntity")
     private List<LRAApplicantExecutionEntity> lraApplicantExecutionEntities;
@@ -72,23 +81,6 @@ public class LRAApplicantEntity implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     @LastModifiedDate
     private Date updatedAt;
-
-    public LRAApplicantEntity() {
-    }
-
-    public LRAApplicantEntity(LRAInstanceEntity lraInstanceEntity, String appName, String serviceName, String httpMethod, String pathVariables, String requestParameters, String requestBodyInJSON, LRAApplicantStatus lraApplicantStatus, Integer connectTimeout, Integer readTimeout, List<LRAApplicantExecutionEntity> lraApplicantExecutionEntities) {
-        this.lraInstanceEntity = lraInstanceEntity;
-        this.appName = appName;
-        this.serviceName = serviceName;
-        this.httpMethod = httpMethod;
-        this.pathVariables = pathVariables;
-        this.requestParameters = requestParameters;
-        this.requestBodyInJSON = requestBodyInJSON;
-        this.lraApplicantStatus = lraApplicantStatus;
-        this.connectTimeout = connectTimeout;
-        this.readTimeout = readTimeout;
-        this.lraApplicantExecutionEntities = lraApplicantExecutionEntities;
-    }
 
     public Long getId() {
         return id;
@@ -120,6 +112,14 @@ public class LRAApplicantEntity implements Serializable {
 
     public void setServiceName(String serviceName) {
         this.serviceName = serviceName;
+    }
+
+    public String getBaseUrl() {
+        return baseUrl;
+    }
+
+    public void setBaseUrl(String baseUrl) {
+        this.baseUrl = baseUrl;
     }
 
     public String getHttpMethod() {
@@ -178,6 +178,14 @@ public class LRAApplicantEntity implements Serializable {
         this.readTimeout = readTimeout;
     }
 
+    public LRAApplicantType getLraApplicantType() {
+        return lraApplicantType;
+    }
+
+    public void setLraApplicantType(LRAApplicantType lraApplicantType) {
+        this.lraApplicantType = lraApplicantType;
+    }
+
     public List<LRAApplicantExecutionEntity> getLraApplicantExecutionEntities() {
         return lraApplicantExecutionEntities;
     }
@@ -209,6 +217,7 @@ public class LRAApplicantEntity implements Serializable {
                 ", lraInstanceEntity=" + lraInstanceEntity +
                 ", appName='" + appName + '\'' +
                 ", serviceName='" + serviceName + '\'' +
+                ", baseUrl='" + baseUrl + '\'' +
                 ", httpMethod='" + httpMethod + '\'' +
                 ", pathVariables='" + pathVariables + '\'' +
                 ", requestParameters='" + requestParameters + '\'' +
@@ -216,9 +225,9 @@ public class LRAApplicantEntity implements Serializable {
                 ", lraApplicantStatus=" + lraApplicantStatus +
                 ", connectTimeout=" + connectTimeout +
                 ", readTimeout=" + readTimeout +
+                ", lraApplicantType=" + lraApplicantType +
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +
                 '}';
     }
-
 }

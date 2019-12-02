@@ -3,27 +3,23 @@ package ir.navaco.core.lra.coordinator.vo;
 import java.io.Serializable;
 import java.util.Map;
 
-public class LRAApplicantRegisterRequestTypeVo implements Serializable {
+public class LRAApplicantDirectRegisterRequestTypeVo implements Serializable {
 
     private String lraInstanceEntityUUID;
-    private String appName;
-    private String serviceName;
+    private String baseUrl;
     private String httpMethod;
-    private String pathVariables;
     private Map<String, String> requestParameters;
     private String requestBodyInJSON;
     private Integer connectTimeout;
     private Integer readTimeout;
 
-    public LRAApplicantRegisterRequestTypeVo() {
+    public LRAApplicantDirectRegisterRequestTypeVo() {
     }
 
-    public LRAApplicantRegisterRequestTypeVo(String lraInstanceEntityUUID, String appName, String serviceName, String httpMethod, String pathVariables, Map<String, String> requestParameters, String requestBodyInJSON, Integer connectTimeout, Integer readTimeout) {
+    public LRAApplicantDirectRegisterRequestTypeVo(String lraInstanceEntityUUID, String baseUrl, String httpMethod, Map<String, String> requestParameters, String requestBodyInJSON, Integer connectTimeout, Integer readTimeout) {
         this.lraInstanceEntityUUID = lraInstanceEntityUUID;
-        this.appName = appName;
-        this.serviceName = serviceName;
+        this.baseUrl = baseUrl;
         this.httpMethod = httpMethod;
-        this.pathVariables = pathVariables;
         this.requestParameters = requestParameters;
         this.requestBodyInJSON = requestBodyInJSON;
         this.connectTimeout = connectTimeout;
@@ -38,20 +34,12 @@ public class LRAApplicantRegisterRequestTypeVo implements Serializable {
         this.lraInstanceEntityUUID = lraInstanceEntityUUID;
     }
 
-    public String getAppName() {
-        return appName;
+    public String getBaseUrl() {
+        return baseUrl;
     }
 
-    public void setAppName(String appName) {
-        this.appName = appName;
-    }
-
-    public String getServiceName() {
-        return serviceName;
-    }
-
-    public void setServiceName(String serviceName) {
-        this.serviceName = serviceName;
+    public void setBaseUrl(String baseUrl) {
+        this.baseUrl = baseUrl;
     }
 
     public String getHttpMethod() {
@@ -60,14 +48,6 @@ public class LRAApplicantRegisterRequestTypeVo implements Serializable {
 
     public void setHttpMethod(String httpMethod) {
         this.httpMethod = httpMethod;
-    }
-
-    public String getPathVariables() {
-        return pathVariables;
-    }
-
-    public void setPathVariables(String pathVariables) {
-        this.pathVariables = pathVariables;
     }
 
     public Map<String, String> getRequestParameters() {
@@ -104,12 +84,10 @@ public class LRAApplicantRegisterRequestTypeVo implements Serializable {
 
     @Override
     public String toString() {
-        return "LRAApplicantRegisterRequestTypeVo{" +
+        return "LRAApplicantEurekaRegisterRequestTypeVo{" +
                 "lraInstanceEntityUUID='" + lraInstanceEntityUUID + '\'' +
-                ", appName='" + appName + '\'' +
-                ", serviceName='" + serviceName + '\'' +
+                ", baseUrl='" + baseUrl + '\'' +
                 ", httpMethod='" + httpMethod + '\'' +
-                ", pathVariables='" + pathVariables + '\'' +
                 ", requestParameters=" + requestParameters +
                 ", requestBodyInJSON='" + requestBodyInJSON + '\'' +
                 ", connectTimeout=" + connectTimeout +

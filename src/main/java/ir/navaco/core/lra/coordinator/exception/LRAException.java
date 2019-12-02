@@ -7,7 +7,7 @@ public class LRAException {
         private String uuid;
 
         public InstanceNotFoundException(String uuid) {
-            super("The LRA instance with uuid = \"" + uuid + "\" does not exist");
+            super("The LRA instance with uuid = \"" + uuid + "\" does not exist.");
             this.uuid = uuid;
         }
 
@@ -21,7 +21,7 @@ public class LRAException {
         private String uuid;
 
         public InstanceAlreadyProcessedException(String uuid) {
-            super("The LRA instance with uuid = \"" + uuid + "\" is already processed and you cant register any applicant");
+            super("The LRA instance with uuid = \"" + uuid + "\" is already been processed and you cant register any applicant to it.");
             this.uuid = uuid;
         }
 
@@ -35,7 +35,7 @@ public class LRAException {
         private String uuid;
 
         public InstanceUnderCancelException(String uuid) {
-            super("The LRA instance with uuid = \"" + uuid + "\" is under canceling");
+            super("The LRA instance with uuid = \"" + uuid + "\" is under canceling.");
             this.uuid = uuid;
         }
 
@@ -49,7 +49,7 @@ public class LRAException {
         private String uuid;
 
         public InstanceAlreadyCanceledException(String uuid) {
-            super("The LRA instance with uuid = \"" + uuid + "\" is already canceled");
+            super("The LRA instance with uuid = \"" + uuid + "\" is already been canceled.");
             this.uuid = uuid;
         }
 

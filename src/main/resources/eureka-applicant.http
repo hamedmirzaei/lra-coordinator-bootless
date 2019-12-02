@@ -17,11 +17,8 @@ Content-Type: application/json
   "uuid" : "this-is-sample-uuid"
 }
 ###
-# get a test applicant
-GET http://localhost:8085/lra-coordinator/applicant
-###
-# register a get applicant
-POST http://localhost:8085/lra-coordinator/applicant
+# register a get eureka applicant
+POST http://localhost:8085/lra-coordinator/eurekaapplicant
 Content-Type: application/json
 
 {
@@ -38,8 +35,8 @@ Content-Type: application/json
   "readTimeout": 20000
 }
 ###
-# register a post applicant
-POST http://localhost:8085/lra-coordinator/applicant
+# register a post eureka applicant
+POST http://localhost:8085/lra-coordinator/eurekaapplicant
 Content-Type: application/json
 
 {
@@ -51,8 +48,3 @@ Content-Type: application/json
   "requestParameters": null,
   "requestBodyInJSON": "{ \"factoryName\" : \"type1\" }"
 }
-###
-
-GET http://localhost:8085/lra-coordinator/test
-
-###

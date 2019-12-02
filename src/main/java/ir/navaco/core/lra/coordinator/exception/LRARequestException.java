@@ -27,7 +27,7 @@ public class LRARequestException {
         private String fieldName;
 
         public FieldNotExistException(String fieldName) {
-            super("The field with name \"" + fieldName + "\" does not exists in the input map");
+            super("The field with name \"" + fieldName + "\" does not exists in the input map.");
             this.fieldName = fieldName;
         }
 

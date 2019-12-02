@@ -1,0 +1,47 @@
+# health check
+GET http://localhost:8085/lra-coordinator/health
+###
+# create LRA instance
+POST http://localhost:8085/lra-coordinator/instance
+Content-Type: application/json
+
+{
+  "retryLimit" : "5"
+}
+###
+# cancel LRA instance
+POST http://localhost:8085/lra-coordinator/instance/cancel
+Content-Type: application/json
+
+{
+  "uuid" : "this-is-sample-uuid"
+}
+###
+# register a get direct applicant
+POST http://localhost:8085/lra-coordinator/directapplicant
+Content-Type: application/json
+
+{
+  "lraInstanceEntityUUID": "this-is-sample-uuid",
+  "baseUrl": "http://localhost:8082/state-machine/health",
+  "httpMethod": "GET",
+  "requestParameters": {
+    "param1": "value1"
+  },
+  "requestBodyInJSON": "{ \"factoryName\" : \"type1\" }",
+  "connectTimeout": 20000,
+  "readTimeout": 20000
+}
+###
+# register a post direct applicant
+POST http://localhost:8085/lra-coordinator/directapplicant
+Content-Type: application/json
+
+{
+  "lraInstanceEntityUUID": "this-is-sample-uuid",
+  "baseUrl": "http://localhost:8082/state-machine/create",
+  "httpMethod": "POST",
+  "pathVariables": null,
+  "requestParameters": null,
+  "requestBodyInJSON": "{ \"factoryName\" : \"type1\" }"
+}

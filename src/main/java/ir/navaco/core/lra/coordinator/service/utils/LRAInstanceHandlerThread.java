@@ -100,7 +100,7 @@ public class LRAInstanceHandlerThread implements Callable<Boolean> {
     }
 
     /**
-     * this method uses edge-server to call rest request
+     * this method uses RestTemplate to call rest request
      *
      * @param lraApplicantEntity contains all the info about rest provider
      * @return true in case of success and false otherwise
@@ -110,37 +110,35 @@ public class LRAInstanceHandlerThread implements Callable<Boolean> {
         try {
             RestTemplate restTemplate = restTemplate(lraApplicantEntity.getConnectTimeout(), lraApplicantEntity.getReadTimeout());
 
-            //set appName and serviceName
-            String url = Constants.eurekaProperties.getEdgeServerURL() + lraApplicantEntity.getAppName() + "/" + lraApplicantEntity.getServiceName();
-
-            //set path variables
-            if (lraApplicantEntity.getPathVariables() != null && !lraApplicantEntity.getPathVariables().equals(""))
-                url = url + "/" + lraApplicantEntity.getPathVariables();
+            String url = "";
+            //set appName, serviceName and PathVariables
+            if (lraApplicantEntity.getAppName() == null || lraApplicantEntity.getServiceName() == null ||
+                    "".equals(lraApplicantEntity.getAppName()) || "".equals(lraApplicantEntity.getServiceName())) {
+                url = lraApplicantEntity.getBaseUrl();
+            } else {
+                url = Constants.eurekaProperties.getEdgeServerURL() + lraApplicantEntity.getAppName() + "/" + lraApplicantEntity.getServiceName();
+                if (lraApplicantEntity.getPathVariables() != null && !lraApplicantEntity.getPathVariables().equals(""))
+                    url = url + "/" + lraApplicantEntity.getPathVariables();
+            }
 
             //set query params
-            if (lraApplicantEntity.getRequestParameters() != null && !lraApplicantEntity.getRequestParameters().equals("")) {
-                UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
-                for (Map.Entry<String, String> param : MapUtils.stringToMap(lraApplicantEntity.getRequestParameters()).entrySet()) {
-                    builder.queryParam(param.getKey(), param.getValue());
-                }
-                url = builder.toUriString();
-            }
+            url = appendRequestParams(lraApplicantEntity.getRequestParameters(), url);
 
             HttpMethod method = HttpMethod.resolve(lraApplicantEntity.getHttpMethod());
             HttpEntity<String> requestEntity = HttpUtils.createHeader(lraApplicantEntity.getRequestBodyInJSON(), method);
 
-            ResponseEntity<LRAApplicantCompensationResponseTypeVo> response = restTemplate.exchange(
+            ResponseEntity<Object> response = restTemplate.exchange(
                     url,
                     method,
                     requestEntity,
-                    new ParameterizedTypeReference<LRAApplicantCompensationResponseTypeVo>() {
+                    new ParameterizedTypeReference<Object>() {
                     });
             //if response.messageCode = 'LRA-0000' then every thing is Ok, not otherwise
             //remember that compensation actions should not return anything, they
             //are just business code which we expect to return a StatusCode of 200
             //or something else (like 422)
-            lraApplicantExecutionEntity.setMessage(response.getBody().getMessageCode());
-            if ("LRA-0000".equals(response.getBody().getMessageCode())) {
+            lraApplicantExecutionEntity.setMessage(response.getBody().toString());
+            if (/*"LRA-0000".equals(response.getBody().getMessageCode())*/ true) {
                 successLRAApplicantExecutionEntity(lraApplicantExecutionEntity);
                 return true;
             }
@@ -150,6 +148,17 @@ public class LRAInstanceHandlerThread implements Callable<Boolean> {
         }
         failedLRAApplicantExecutionEntity(lraApplicantExecutionEntity);
         return false;
+    }
+
+    private String appendRequestParams(String requestParams, String url) {
+        if (requestParams != null && !"".equals(requestParams)) {
+            UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
+            for (Map.Entry<String, String> param : MapUtils.stringToMap(requestParams).entrySet()) {
+                builder.queryParam(param.getKey(), param.getValue());
+            }
+            url = builder.toUriString();
+        }
+        return url;
     }
 
     private void failedLRAInstanceExecutionEntity(LRAInstanceExecutionEntity lraInstanceExecutionEntity) {
