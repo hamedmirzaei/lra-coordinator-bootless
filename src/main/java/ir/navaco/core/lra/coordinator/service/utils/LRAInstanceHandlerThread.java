@@ -127,18 +127,18 @@ public class LRAInstanceHandlerThread implements Callable<Boolean> {
             HttpMethod method = HttpMethod.resolve(lraApplicantEntity.getHttpMethod());
             HttpEntity<String> requestEntity = HttpUtils.createHeader(lraApplicantEntity.getRequestBodyInJSON(), method);
 
-            ResponseEntity<Object> response = restTemplate.exchange(
+            ResponseEntity<LRAApplicantCompensationResponseTypeVo> response = restTemplate.exchange(
                     url,
                     method,
                     requestEntity,
-                    new ParameterizedTypeReference<Object>() {
+                    new ParameterizedTypeReference<LRAApplicantCompensationResponseTypeVo>() {
                     });
             //if response.messageCode = 'LRA-0000' then every thing is Ok, not otherwise
             //remember that compensation actions should not return anything, they
             //are just business code which we expect to return a StatusCode of 200
             //or something else (like 422)
-            lraApplicantExecutionEntity.setMessage(response.getBody().toString());
-            if (/*"LRA-0000".equals(response.getBody().getMessageCode())*/ true) {
+            lraApplicantExecutionEntity.setMessage(response.getBody().getMessageCode());
+            if ("LRA-0000".equals(response.getBody().getMessageCode())) {
                 successLRAApplicantExecutionEntity(lraApplicantExecutionEntity);
                 return true;
             }

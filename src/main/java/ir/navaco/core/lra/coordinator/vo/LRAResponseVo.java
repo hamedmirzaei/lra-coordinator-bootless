@@ -22,14 +22,17 @@ public class LRAResponseVo implements Serializable {
     }
 
     public LRAResponseVo(long numberValue) {
+        setSuccess();
         this.numberValue = numberValue;
     }
 
     public LRAResponseVo(String stringValue) {
+        setSuccess();
         this.stringValue = stringValue;
     }
 
     public LRAResponseVo(Object objectValue) {
+        setSuccess();
         this.objectValue = objectValue;
     }
 
